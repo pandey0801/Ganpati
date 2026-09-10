@@ -1,0 +1,57 @@
+[
+  {
+    "id": "w-1",
+    "name": "Alicia Brooks",
+    "serviceId": "plumbing",
+    "phone": "+1 (555) 210-8890",
+    "location": "Downtown",
+    "image": "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=800&q=80",
+    "description": "Handles kitchen and bathroom fixture replacements with quick turnaround times.",
+    "availability": "Available",
+    "rating": 4.8
+  },
+  {
+    "id": "w-2",
+    "name": "Marcus Hall",
+    "serviceId": "electrical",
+    "phone": "+1 (555) 432-1175",
+    "location": "Westfield",
+    "image": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=800&q=80",
+    "description": "Specializes in lighting upgrades, outlet repair, and safe wiring checks.",
+    "availability": "Busy",
+    "rating": 4.7
+  },
+  {
+    "id": "w-3",
+    "name": "Naomi Patel",
+    "serviceId": "cleaning",
+    "phone": "+1 (555) 671-2299",
+    "location": "Riverside",
+    "image": "https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?auto=format&fit=crop&w=800&q=80",
+    "description": "Provides deep-cleaning plans for homes and compact office spaces.",
+    "availability": "Available",
+    "rating": 4.9
+  },
+  {
+    "id": "w-4",
+    "name": "Oliver Nguyen",
+    "serviceId": "gardening",
+    "phone": "+1 (555) 904-3155",
+    "location": "North Hill",
+    "image": "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=800&q=80",
+    "description": "Maintains plants, landscaping, and seasonal garden refreshes.",
+    "availability": "Unavailable",
+    "rating": 4.6
+  },
+  {
+    "id": "w-5",
+    "name": "Sofia Carter",
+    "serviceId": "plumbing",
+    "phone": "+1 (555) 128-4461",
+    "location": "Harbor View",
+    "image": "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=800&q=80",
+    "description": "Focuses on emergency pipe fixes and planned water system upgrades.",
+    "availability": "Available",
+    "rating": 4.8
+  }
+]
