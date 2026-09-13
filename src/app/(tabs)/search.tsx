@@ -48,7 +48,7 @@ const styles = StyleSheet.create({
   },
   content: {
     padding: 20,
-    paddingBottom: 32,
+    // paddingBottom: 32,
   },
   input: {
     backgroundColor: colors.surface,

@@ -12,14 +12,14 @@
   },
   {
     "id": "w-2",
-    "name": "Marcus Hall",
+    "name": "Gyaanu soni",
     "serviceId": "electrical",
-    "phone": "+1 (555) 432-1175",
-    "location": "Westfield",
-    "image": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=800&q=80",
+    "phone": "+916269653976",
+    "location": "Rajpur Balrampur ",
+    "image": "https://lh3.googleusercontent.com/d/1vWnBy_Z7r5qzWIowBhCuobGz8qeK6uPr",
     "description": "Specializes in lighting upgrades, outlet repair, and safe wiring checks.",
-    "availability": "Busy",
-    "rating": 4.7
+    "availability": "Available",
+    "rating": 5 
   },
   {
     "id": "w-3",
@@ -53,5 +53,15 @@
     "description": "Focuses on emergency pipe fixes and planned water system upgrades.",
     "availability": "Available",
     "rating": 4.8
-  }
+  },
+ {
+  "id": "w-6",
+  "name": "Sehjad alam",
+  "serviceId": "electrical",
+  "phone": "+19 7771007025",
+  "location": "Mominpura Ambikapur",
+  "image": "https://lh3.googleusercontent.com/d/1ZU-iN2GLb235WXIt340vuDDdMzrp-5aQ",
+  "description": "Specializes in lighting upgrades, outlet repair, and safe wiring checks.",
+  "availability": "Available"
+}
 ]

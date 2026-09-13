@@ -11,4 +11,5 @@ export const colors = {
   success: '#16a34a',
   warning: '#f59e0b',
   danger: '#ef4444',
+  brandGreen: '#087B59',
 };
