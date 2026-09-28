@@ -1,5 +1,10 @@
 import React, { useMemo, useState } from 'react';
 import { SafeAreaView, ScrollView, StyleSheet, TextInput, View } from 'react-native';
+// import { SafeAreaView, ScrollView, StyleSheet, TextInput, View } from 'react-native';
+
+
+// import { SafeAreaView } from 'react-native-safe-area-context';
+
 
 import AppHeader from '@/components/common/AppHeader';
 import EmptyState from '@/components/common/EmptyState';
@@ -8,6 +13,8 @@ import { colors } from '@/constants/colors';
 import workersData from '@/data/workers.json';
 import { filterWorkers } from '@/utils/search';
 import { Worker } from '@/types/worker';
+// import { router } from '../../../.expo/types/router';
+import { router } from 'expo-router';
 
 export default function SearchScreen() {
   const [query, setQuery] = useState('');
@@ -16,7 +23,8 @@ export default function SearchScreen() {
   const filteredWorkers = useMemo(() => filterWorkers(workers, query), [workers, query]);
 
   return (
-    <SafeAreaView style={styles.safeArea}>
+    // <SafeAreaView style={styles.safeArea}>
+     <View style={styles.safeArea}>
       <ScrollView contentContainerStyle={styles.content}>
         <AppHeader title="Search" subtitle="Find workers near you" />
 
@@ -31,13 +39,26 @@ export default function SearchScreen() {
           <EmptyState title="No workers found" message="Try a different keyword or location." />
         ) : (
           <View>
-            {filteredWorkers.map((worker) => (
+            {/* {filteredWorkers.map((worker) => (
               <WorkerCard key={worker.id} worker={worker} />
+            ))} */}
+            {filteredWorkers.map((worker) => (
+              <WorkerCard
+                key={worker.id}
+                worker={worker}
+                onPress={() =>
+                  router.push({
+                    pathname: '/worker/[id]',
+                    params: { id: worker.id },
+                  })
+                }
+              />
             ))}
           </View>
         )}
       </ScrollView>
-    </SafeAreaView>
+    {/* </SafeAreaView> */}
+    </View>
   );
 }
 
@@ -48,7 +69,7 @@ const styles = StyleSheet.create({
   },
   content: {
     padding: 20,
-    // paddingBottom: 32,
+    paddingBottom: 32,
   },
   input: {
     backgroundColor: colors.surface,

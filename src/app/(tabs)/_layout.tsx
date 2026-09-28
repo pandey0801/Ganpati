@@ -98,10 +98,6 @@ export default function TabsLayout() {
           marginBottom: 2,
         },
 
-        // Screen content spacing
-        sceneContainerStyle: {
-          paddingBottom: 12 + insets.bottom,
-        },
       }}
     >
       {/* HOME */}

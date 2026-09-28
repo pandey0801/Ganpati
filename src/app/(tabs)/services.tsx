@@ -25,7 +25,8 @@ export default function ServicesScreen() {
   );
 
   return (
-    <SafeAreaView style={styles.safeArea}>
+    // <SafeAreaView style={styles.safeArea}>
+    <View style={styles.safeArea}>
       <ScrollView contentContainerStyle={styles.content}>
         <AppHeader title="Services" subtitle="Find the support you need" />
 
@@ -57,7 +58,8 @@ export default function ServicesScreen() {
           ))
         )}
       </ScrollView>
-    </SafeAreaView>
+    {/* </SafeAreaView> */}
+    </View>
   );
 }
 
@@ -68,7 +70,8 @@ const styles = StyleSheet.create({
   },
   content: {
     padding: 20,
-    paddingBottom: 0,
+    // paddingBottom: 32,
+    paddingBottom: 20,
   },
   input: {
     backgroundColor: colors.surface,

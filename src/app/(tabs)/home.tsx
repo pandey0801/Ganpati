@@ -12,6 +12,8 @@ import {
    Linking
 } from 'react-native';
 
+import { LinearGradient } from 'expo-linear-gradient';
+
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import AppText from '@/components/common/AppText';
@@ -149,7 +151,8 @@ export default function HomeScreen() {
 }, [searchText, services]);
 
   return (
-    <SafeAreaView style={styles.safeArea}>
+    // <SafeAreaView style={styles.safeArea}>
+      <View style={styles.safeArea}>
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.content}
@@ -260,79 +263,68 @@ export default function HomeScreen() {
           ))}
         </ScrollView>
 {/* 
-         <View style={styles.bannerWrapper}>
+        <View style={styles.bannerWrapper}>
           <View style={styles.banner}>
             <View style={styles.bannerContent}>
-           
-                  <AppText style={styles.bannerTitle}>
-        Trusted{"\n"}Local Workers{"\n"}for Your Needs
-      </AppText>
-              <AppText style={styles.bannerSubtitle}>Fast • Reliable • Affordable</AppText>
-              <Pressable style={styles.bannerAction} onPress={() => navigateToServices()}>
-                <Ionicons name="arrow-forward" size={18} color={brandGreen} />
-              </Pressable>
-            </View> 
+              <AppText style={styles.bannerTitle}>
+                Trusted{"\n"}Local Workers{"\n"}for Your Needs
+              </AppText>
 
-            <View style={styles.bannerArtWrapper}>
-              <View style={styles.bannerArt}>
-                <View style={styles.artHead} />
-                <View style={styles.artBody} />
-                <View style={styles.artBadge} />
-              </View>
+              <AppText style={styles.bannerSubtitle}>Fast • Reliable • Affordable</AppText>
+
+              <Pressable
+                style={styles.bannerAction}
+                onPress={() => navigateToServices()}
+              >
+                <Ionicons name="arrow-forward" size={20} color={brandGreen} />
+              </Pressable>
+            </View>
+
+            <View style={styles.bannerImageWrapper}>
+              <Image
+                source={require('../../../assets/images/man1.png')}
+                style={styles.bannerImage}
+                resizeMode="contain"
+              />
             </View>
           </View>
         </View> */}
 
         <View style={styles.bannerWrapper}>
-  <View style={styles.banner}>
+          <LinearGradient
+            // colors={['#298558', '#38B273']}
+            // start={{ x: 0, y: 0 }}
+            // end={{ x: 1, y: 0 }}
+            // style={styles.banner}
+            colors={['#2E7D52', '#5BC68E']} 
+            start={{ x: 0, y: 0 }} // Starts at the far left
+            end={{ x: 1, y: 0 }}   // Ends at the far right
+            style={styles.banner}
+          >
+            <View style={styles.bannerContent}>
+              <AppText style={styles.bannerTitle}>
+                Trusted{"\n"}Local Workers{"\n"}for Your Needs
+              </AppText>
 
-    {/* LEFT CONTENT */}
-    <View style={styles.bannerContent}>
-      <AppText style={styles.bannerTitle}>
-        Trusted{"\n"}Local Workers{"\n"}for Your Needs
-      </AppText>
+              <AppText style={styles.bannerSubtitle}>Fast • Reliable • Affordable</AppText>
 
-      <AppText style={styles.bannerSubtitle}>
-        Fast • Reliable • Affordable
-      </AppText>
+              <Pressable
+                style={styles.bannerAction}
+                onPress={() => navigateToServices()}
+              >
+                <Ionicons name="arrow-forward" size={20} color={brandGreen} />
+              </Pressable>
+            </View>
 
-      {/* <Pressable
-        style={styles.bannerAction}
-        onPress={() => navigateToServices()}
-      > */}
-      <Pressable
-        style={styles.bannerAction}
-        onPress={() => navigateToServices()}
-      >
-        <Ionicons
-          name="arrow-forward"
-          size={20}
-          color={brandGreen}
-        />
-      </Pressable>
-    </View>
-
-    {/* RIGHT IMAGE */}
-    {/* <View style={styles.bannerImageWrapper}>
-      <Image
-  source={require('../../../assets/images/man1.png')}
-  style={styles.bannerImage}
-  resizeMode="contain"
-/>
-    </View> */}
-
-    <View style={styles.bannerImageWrapper}>
-  <View style={styles.avatarCircle}>
-    <Image
-      source={require('../../../assets/images/man1.png')}
-      style={styles.bannerImage}
-      resizeMode="cover"
-    />
-  </View>
-</View>
-
-  </View>
-</View>
+            <View style={styles.bannerImageWrapper}>
+              <Image
+                source={require('../../../assets/images/man1.png')}
+                style={styles.bannerImage}
+                resizeMode="contain"
+              />
+            </View>
+          </LinearGradient>
+        </View>
 
         <View style={styles.sectionHeaderTopSpacing}>
           <AppText style={styles.sectionTitle}>All Categories</AppText>
@@ -361,44 +353,28 @@ export default function HomeScreen() {
           <Ionicons name="chevron-forward" size={18} color={colors.surface} />
         </Pressable>
 
-            {/* <View style={styles.promoBanner}>
-  <View style={styles.promoContent}>
-    <Ionicons name="logo-whatsapp" size={20} color="#25D366" />
-    <AppText style={styles.promoText}>
-      Want to list your business? WhatsApp us at{' '}
-      <AppText style={styles.promoPhone}>9815432763</AppText>
-    </AppText>
-  </View>
-</View> */}
-
-          <Pressable
-            style={styles.promoBanner}
-            // onPress={() => {
-            //   Linking.openURL('https://wa.me/919815432763');
-            // }}
-            onPress={() => {
+        <Pressable
+          style={styles.promoBanner}
+          onPress={() => {
             const phone = '918223940122';
             const message = 'Hello, I want to list my business on Ganpati.';
-            
+
             Linking.openURL(
               `https://wa.me/${phone}?text=${encodeURIComponent(message)}`
             );
           }}
-          >
-            <View style={styles.promoContent}>
-              <Ionicons name="logo-whatsapp" size={20} color="#25D366" />
+        >
+          <View style={styles.promoContent}>
+            <Ionicons name="logo-whatsapp" size={20} color="#25D366" />
 
-              <AppText style={styles.promoText}>
-                Want to list your business? WhatsApp us at{' '}
-                <AppText style={styles.promoPhone}>
-                  9815432763
-                </AppText>
-              </AppText>
-            </View>
-          </Pressable>
-
+            <AppText style={styles.promoText}>
+              Want to list your business? WhatsApp us at{' '}
+              <AppText style={styles.promoPhone}>9815432763</AppText>
+            </AppText>
+          </View>
+        </Pressable>
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 }
 
@@ -410,7 +386,7 @@ const styles = StyleSheet.create({
   content: {
     paddingHorizontal: 16,
     paddingTop: 10,
-    paddingBottom: 32,
+    paddingBottom: 12,
     alignItems: 'stretch',
   },
   headerRow: {
@@ -528,32 +504,51 @@ bannerWrapper: {
   width: '100%',
 },
 
+// banner: {
+//   height: 150,
+//   width: '100%',
+//   backgroundColor: brandGreen,
+//   borderRadius: 20,
+//   overflow: 'hidden',
+
+//   flexDirection: 'row',
+//   alignItems: 'stretch',
+//   justifyContent: 'space-between',
+
+//   shadowColor: '#0A291B',
+//   shadowOpacity: 0.12,
+//   shadowRadius: 12,
+//   shadowOffset: {
+//     width: 0,
+//     height: 8,
+//   },
+//   elevation: 3,
+// },
+
 banner: {
-  height: 150,
-  width: '100%',
-  backgroundColor: brandGreen,
-  borderRadius: 20,
-  overflow: 'hidden',
-
-  flexDirection: 'row',
-  alignItems: 'stretch',
-  justifyContent: 'space-between',
-
-  shadowColor: '#0A291B',
-  shadowOpacity: 0.12,
-  shadowRadius: 12,
-  shadowOffset: {
-    width: 0,
-    height: 8,
+    height: 150,
+    width: '100%',
+    borderRadius: 20,
+    overflow: 'hidden',
+    flexDirection: 'row',
+    alignItems: 'stretch',
+    justifyContent: 'space-between',
+    // backgroundColor: brandGreen, <-- Removed because of LinearGradient
+    shadowColor: '#0A291B',
+    shadowOpacity: 0.12,
+    shadowRadius: 12,
+    shadowOffset: {
+      width: 0,
+      height: 8,
+    },
+    elevation: 3,
   },
-  elevation: 3,
-},
 
 bannerContent: {
   flex: 1,
   paddingLeft: 18,
-  paddingTop: 17,
-  paddingBottom: 12,
+  paddingTop: 10,
+  paddingBottom: 3,
   zIndex: 2,
 },
 
@@ -573,16 +568,22 @@ bannerSubtitle: {
 },
 
 bannerAction: {
-  marginTop: 10,
-  width: 38,
-  height: 38,
-  borderRadius: 19,
+  marginTop: 1,
+  width: 36,
+  height: 36,
+  borderRadius: 18,
   backgroundColor: colors.surface,
 
   justifyContent: 'center',
   alignItems: 'center',
 
   alignSelf: 'flex-start',
+
+  shadowColor: '#000',
+          shadowOffset: { width: 0, height: 2 },
+          shadowOpacity: 0.1,
+          shadowRadius: 3,
+          elevation: 2, // Android shadow
 },
 
 // bannerImageWrapper: {
@@ -620,18 +621,25 @@ bannerImageWrapper: {
   alignItems: 'center',
   paddingRight: 10,
 },
-avatarCircle: {
-  width: 110,
-  height: 110,
-  borderRadius: 55,
-  overflow: 'hidden',
-  backgroundColor: 'rgba(255, 255, 255, 0.2)', // Soft white glow ring
-  borderWidth: 2,
-  borderColor: 'rgba(255, 255, 255, 0.4)',
-  justifyContent: 'center',
-  alignItems: 'center',
-},
-
+// avatarCircle: {
+//   width: 110,
+//   height: 110,
+//   borderRadius: 55,
+//   overflow: 'hidden',
+//   backgroundColor: 'rgba(255, 255, 255, 0.2)', // Soft white glow ring
+//   borderWidth: 2,
+//   borderColor: 'rgba(255, 255, 255, 0.4)',
+//   justifyContent: 'center',
+//   alignItems: 'center',
+// },
+bannerImage: {
+       position: 'absolute',
+        bottom: -5,
+        right: -10, // Pushes it completely to the right edge
+        width: 160, // Adjust this based on your transparent PNG
+        height: 155,
+        zIndex: 1,
+  },
 // bannerImage: {
 //   width: 170,
 //   height: 170,
@@ -640,10 +648,10 @@ avatarCircle: {
 //   right: -8,
 // },
 
-bannerImage: {
-  width: 110,
-  height: 110,
-},
+// bannerImage: {
+//   width: 110,
+//   height: 110,
+// },
 
   bannerArtWrapper: {
     width: 120,
@@ -758,7 +766,7 @@ promoBanner: {
   paddingHorizontal: 16,
   marginHorizontal: 16,
   marginTop: 16,
-  marginBottom: 24,
+  marginBottom: 0,
   borderWidth: 1,
   borderColor: '#C8E6C9',
 },

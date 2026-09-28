@@ -1,16 +1,5 @@
 [
   {
-    "id": "w-1",
-    "name": "Alicia Brooks",
-    "serviceId": "plumbing",
-    "phone": "+1 (555) 210-8890",
-    "location": "Downtown",
-    "image": "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=800&q=80",
-    "description": "Handles kitchen and bathroom fixture replacements with quick turnaround times.",
-    "availability": "Available",
-    "rating": 4.8
-  },
-  {
     "id": "w-2",
     "name": "Gyaanu soni",
     "serviceId": "electrical",
@@ -21,47 +10,213 @@
     "availability": "Available",
     "rating": 5 
   },
-  {
-    "id": "w-3",
-    "name": "Naomi Patel",
-    "serviceId": "cleaning",
-    "phone": "+1 (555) 671-2299",
-    "location": "Riverside",
-    "image": "https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?auto=format&fit=crop&w=800&q=80",
-    "description": "Provides deep-cleaning plans for homes and compact office spaces.",
-    "availability": "Available",
-    "rating": 4.9
-  },
-  {
-    "id": "w-4",
-    "name": "Oliver Nguyen",
-    "serviceId": "gardening",
-    "phone": "+1 (555) 904-3155",
-    "location": "North Hill",
-    "image": "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=800&q=80",
-    "description": "Maintains plants, landscaping, and seasonal garden refreshes.",
-    "availability": "Unavailable",
-    "rating": 4.6
-  },
-  {
-    "id": "w-5",
-    "name": "Sofia Carter",
-    "serviceId": "plumbing",
-    "phone": "+1 (555) 128-4461",
-    "location": "Harbor View",
-    "image": "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=800&q=80",
-    "description": "Focuses on emergency pipe fixes and planned water system upgrades.",
-    "availability": "Available",
-    "rating": 4.8
-  },
  {
   "id": "w-6",
   "name": "Sehjad alam",
   "serviceId": "electrical",
-  "phone": "+19 7771007025",
+  "phone": "+917771007025",
   "location": "Mominpura Ambikapur",
   "image": "https://lh3.googleusercontent.com/d/1ZU-iN2GLb235WXIt340vuDDdMzrp-5aQ",
   "description": "Specializes in lighting upgrades, outlet repair, and safe wiring checks.",
   "availability": "Available"
-}
+},
+
+  {
+    "id": "w-8",
+    "name": "Rajkumar",
+    "serviceId": "plumbing",
+    "phone": "+919165226303",
+    "location": "Gangapur Ambikapur",
+    "image": "https://placeholder.com/image.jpg",
+    "description": "Expert in fixing leaks, pipe installations, and bathroom fittings.",
+    "availability": "Available",
+    "rating": 5
+  },
+  {
+    "id": "w-9",
+    "name": "Mahesh Ekka",
+    "serviceId": "plumbing",
+    "phone": "+917067051835",
+    "location": "Namnakala Ambikapur",
+    "image": "https://lh3.googleusercontent.com/d/19aiuZFZ2K5wAU55W-LVWXUGc6ec1z6Pk",
+    "description": "Professional plumbing services, drain cleaning, and maintenance.",
+    "availability": "Available",
+    "rating": 5
+  },
+  {
+    "id": "w-10",
+    "name": "Aman Thakur",
+    "serviceId": "driver",
+    "phone": "+916261807020",
+    "location": "Gandhinagar Ambikapur",
+    "image": "https://lh3.googleusercontent.com/d/1_0FPPc88-HsqX5H8X8Eoo2MURA27svG4",
+    "description": "Reliable and safe driving services for local and outstation trips.",
+    "availability": "Available",
+  },
+  {
+    "id": "w-11",
+    "name": "Ashutosh Patel",
+    "serviceId": "driver",
+    "phone": "+919131243400",
+    "location": "Gandhinagar Ambikapur",
+    "image": "https://lh3.googleusercontent.com/d/1rIoUTm1Hq0sasggAqRtGkmFVa7nqXpBE",
+    "description": "Experienced driver available for daily commutes and long journeys.",
+    "availability": "Available",
+    "rating": 5
+  },
+  {
+    "id": "w-14",
+    "name": "Avinash Kujur",
+    "serviceId": "driver",
+    "phone": "+918103654498",
+    "location": "Patpariya Ambikapur",
+    "image": "https://lh3.googleusercontent.com/d/1bVzRP_dnfRW-f9Ehu2-NqjZxpLdURjUE",
+    "description": "Professional personal driver for all your travel needs.",
+    "availability": "Available",
+    "rating": 5
+  },
+  {
+    "id": "w-15",
+    "name": "Prabhu Kumar",
+    "serviceId": "carpenter",
+    "phone": "+917047083811",
+    "location": "Malhotra Gali Ambikapur",
+    "image": "https://lh3.googleusercontent.com/d/1TYYuAe7v3O7-lE2N1FFnsoNax7VpIqMo",
+    "description": "Skilled carpenter for furniture repair, wooden fittings, and custom creations.",
+    "availability": "Available",
+    "rating": 5
+  
+  },
+  {
+    "id": "w-16",
+    "name": "Sunil Sharma",
+    "serviceId": "carpenter",
+    "phone": "+919826120793",
+    "location": "Godhanpur Ambikapur",
+    "image": "https://lh3.googleusercontent.com/d/1nc9zG-uUA7oNbPhluKEHJ7GAad_F0DCx",
+    "description": "Expert in home woodwork, door repairs, and modern furniture assembly.",
+    "availability": "Available",
+    "rating": 5
+  },
+  {
+    "id": "w-17",
+    "name": "Sneha Bhagat",
+    "serviceId": "beauty-salon",
+    "phone": "+916266775693",
+    "location": "Ambikapur",
+    "image": "https://lh3.googleusercontent.com/d/1XoRoy4-n6avuc7O8lDjIY_6MBtiPOeuB",
+    "description": "Professional makeup, styling, and at-home beauty services.",
+    "availability": "Available",
+    "rating": 5
+  },
+  {
+    "id": "w-18",
+    "name": "Amit Jaiswal",
+    "serviceId": "ac-repair",
+    "phone": "+919340871636",
+    "location": "Pratappur Naka Ambikapur",
+    "image": "https://lh3.googleusercontent.com/d/1_brC-1dMUWhkZun-ekQ_JzRzM0pWfNsO",
+    "description": "Specialist in AC installation, gas filling, and routine servicing.",
+    "availability": "Available",
+    "rating": 5
+  },
+  {
+    "id": "w-20",
+    "name": "Devlal",
+    "serviceId": "plumbing",
+    "phone": "+918305750311",
+    "location": "Ambikapur",
+    "image": "https://lh3.googleusercontent.com/d/1r-Y0NCzhGwv9eIkvzmaB2-FQcgD78Qow",
+    "description": "Quick and reliable plumbing repairs and water tank maintenance.",
+    "availability": "Available",
+    "rating": 5
+  },
+  {
+    "id": "w-21",
+    "name": "Kailash",
+    "serviceId": "plumbing",
+    "phone": "+916268093472",
+    "location": "Ambikapur",
+    "image": "https://placeholder.com/image.jpg",
+    "description": "Experienced plumber resolving household leakages and pipe blockage issues.",
+    "availability": "Available",
+    "rating": 5
+  },
+  {
+    "id": "w-22",
+    "name": "Rajendra Puri",
+    "serviceId": "construction-worker",
+    "phone": "+916263361352",
+    "location": "Ambikapur",
+    "image": "https://lh3.googleusercontent.com/d/1RyZpWmMAdrK-L8OFNeJOtow0FsM6Oyuk",
+    "description": "Trusted local plumber for fast and affordable service.",
+    "availability": "Available",
+    "rating": 5
+  },
+  {
+    "id": "w-23",
+    "name": "Akhilesh",
+    "serviceId": "electrical",
+    "phone": "+916263271755",
+    "location": "Ambikapur",
+    "image": "https://lh3.googleusercontent.com/d/1TIfMmHEeIFutuqn2wfQ0UZ-MguAm8mJ-",
+    "description": "Expert in fixing power faults, replacing switches, and electrical installations.",
+    "availability": "Available",
+    "rating": 5
+  },
+    {
+    "id": "w-24",
+    "name": "Md sahil",
+    "serviceId": "electrical",
+    "phone": "+917803060969",
+    "location": "Mahamaya chowk",
+    "image": "https://lh3.googleusercontent.com/d/1LOXXqjiWHf-yTMpFgzKnOTGrmy_RQCXG",
+    "description": "Expert in fixing power faults, replacing switches, and electrical installations.",
+    "availability": "Available",
+    "rating": 5
+  },
+   {
+    "id": "w-26",
+    "name": "Dheeraj sinha",
+    "serviceId": "electrical",
+    "phone": "+918319189728",
+    "location": "Sanjay park Ambikapur",
+    "image": "https://lh3.googleusercontent.com/d/17nzjidopa3LHG0-76_cMmOvOLWJHmgl5",
+    "description": "Expert in fixing power faults, replacing switches, and electrical installations.",
+    "availability": "Available",
+    "rating": 5
+  },
+  {
+    "id": "w-27",
+    "name": "Md nasrullah khan ",
+    "serviceId": "ac-repair",
+    "phone": "+918839987485",
+    "location": "imlipara Ambikapur",
+    "image": "https://lh3.googleusercontent.com/d/1m3XpVojJROQkS7IS_yd3R9a7lrtBZHlw",
+    "description": "Experienced AC repair specialist for installation, maintenance, and troubleshooting.",
+    "availability": "Available",
+    "rating": 5
+  },
+  {
+    "id": "w-28",
+    "name": "Laxman",
+    "serviceId": "driver",
+    "phone": "+919329003223",
+    "location": "Ambikapur",
+    "image": "https://lh3.googleusercontent.com/d/1lX4NLQ9D8n9vXup-yOSEwZbw9RV_9Kr8",
+    "description": "Reliable driver for transportation needs.",
+    "availability": "Available",
+    "rating": 5
+  },
+  {
+    "id": "w-30",
+    "name": "Ajay kumar",
+    "serviceId": "painter",
+    "phone": "+919343256844",
+    "location": "Balrampur ",
+    "image": "https://lh3.googleusercontent.com/d/1-Xa6FU3vOdaWfI1PSEyz0RIvZZN4XgiB",
+    "description": "Professional painter for interior and exterior painting projects.",
+    "availability": "Available",
+    "rating": 5
+  }
 ]
