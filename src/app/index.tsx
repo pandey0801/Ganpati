@@ -81,7 +81,7 @@
 //             <Ionicons
 //               name="location-outline"
 //               size={19}
-//               color="#3D806D"
+//               color="#E87516"
 //             />
 
 //             <Text style={styles.locationText}>
@@ -130,7 +130,7 @@
 //     lineHeight: width * 0.115,
 //     fontWeight: '800',
 
-//     color: '#087B59',
+//     color: '#E87516',
 
 //     letterSpacing: -1,
 
@@ -244,6 +244,7 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
+import { colors } from '@/constants/colors';
 
 const { width, height } = Dimensions.get('window');
 
@@ -290,7 +291,7 @@ export default function EntryScreen() {
             <Ionicons
               name="location"
               size={18}
-              color="#D4AF37"
+              color={colors.primary}
               style={styles.locationIcon}
             />
             <Text style={styles.locationText}>
@@ -314,12 +315,12 @@ export default function EntryScreen() {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#FAF8F5',
+    backgroundColor: colors.background,
   },
 
   container: {
     flex: 1,
-    backgroundColor: '#FAF8F5',
+    backgroundColor: colors.background,
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingVertical: height * 0.04,
@@ -340,7 +341,7 @@ const styles = StyleSheet.create({
   appNamePrimary: {
     fontSize: width * 0.12,
     fontWeight: '700',
-    color: '#B88222',
+    color: colors.primaryDark,
     textAlign: 'center',
     letterSpacing: 0.5,
   },
@@ -348,7 +349,7 @@ const styles = StyleSheet.create({
   appNameSecondary: {
     fontSize: width * 0.11,
     fontWeight: '700',
-    color: '#B88222',
+    color: colors.primaryDark,
     textAlign: 'center',
     marginTop: -8,
   },
@@ -369,7 +370,7 @@ const styles = StyleSheet.create({
   tagline: {
     fontSize: width * 0.06,
     fontWeight: '700',
-    color: '#1E2B58',
+    color: colors.text,
     marginTop: height * 0.02,
     textAlign: 'center',
   },
@@ -387,7 +388,7 @@ const styles = StyleSheet.create({
   locationText: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#1E2B58',
+    color: colors.text,
   },
 
   bottomSection: {
@@ -399,7 +400,7 @@ const styles = StyleSheet.create({
   dividerLine: {
     width: width * 0.35,
     height: 1.5,
-    backgroundColor: '#D4AF37',
+    backgroundColor: colors.primary,
     marginBottom: 8,
     opacity: 0.8,
   },
@@ -407,6 +408,6 @@ const styles = StyleSheet.create({
   loadingText: {
     fontSize: 13,
     fontWeight: '500',
-    color: '#B88222',
+    color: colors.primaryDark,
   },
 });

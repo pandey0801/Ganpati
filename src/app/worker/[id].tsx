@@ -1,20 +1,33 @@
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import React from 'react';
-import { Image, SafeAreaView, ScrollView, StyleSheet, View } from 'react-native';
+import { SafeAreaView, ScrollView, StyleSheet, View } from 'react-native';
 
 import AppButton from '@/components/common/AppButton';
 import AppText from '@/components/common/AppText';
 import ContactButtons from '@/components/workers/ContactButtons';
+import WorkerImage from '@/components/workers/WorkerImage';
 import WorkerInfo from '@/components/workers/WorkerInfo';
+import WorkerLoadState from '@/components/workers/WorkerLoadState';
 import { colors } from '@/constants/colors';
-import workersData from '@/data/workers.json';
-import { Worker } from '@/types/worker';
+import { useWorkers } from '@/hooks/useWorkers';
 
 export default function WorkerDetailScreen() {
   const router = useRouter();
   const { id } = useLocalSearchParams<{ id: string }>();
-  const workers = workersData as Worker[];
+  const { workers, isLoading, error, retry } = useWorkers({ workerId: id });
   const worker = workers.find((item) => item.id === id);
+
+  if (isLoading || error) {
+    return (
+      <SafeAreaView style={styles.safeArea}>
+        <WorkerLoadState
+          status={isLoading ? 'loading' : 'error'}
+          message={error ? 'Please check your connection and try again.' : undefined}
+          onRetry={error ? retry : undefined}
+        />
+      </SafeAreaView>
+    );
+  }
 
   if (!worker) {
     return (
@@ -29,14 +42,14 @@ export default function WorkerDetailScreen() {
   return (
     <SafeAreaView style={styles.safeArea}>
       <ScrollView contentContainerStyle={styles.content}>
-        <Image source={{ uri: worker.image }} style={styles.image} />
+        <WorkerImage uri={worker.image} style={styles.image} />
 
         <View style={styles.header}>
           <AppText variant="title">{worker.name}</AppText>
           <AppText variant="caption" style={styles.location}>{worker.location}</AppText>
         </View>
 
-        <ContactButtons />
+        <ContactButtons phone={worker.phone} />
         <WorkerInfo worker={worker} />
 
         <AppButton title="Back" variant="outline" onPress={() => router.back()} />

@@ -6,17 +6,17 @@ import { ScrollView, StyleSheet, TextInput, View } from 'react-native';
 import AppHeader from '@/components/common/AppHeader';
 import EmptyState from '@/components/common/EmptyState';
 import ServiceListItem from '@/components/services/ServiceListItem';
+import ServiceLoadState from '@/components/services/ServiceLoadState';
 import { colors } from '@/constants/colors';
-import servicesData from '@/data/services.json';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { useServices } from '@/hooks/useServices';
 import { filterServices } from '@/utils/search';
-import { Service } from '@/types/service';
 
 export default function ServicesScreen() {
   const router = useRouter();
+  const [isInputFocused, setIsInputFocused] = useState(false);
   const { category, query: searchQuery } = useLocalSearchParams<{ category?: string | string[]; query?: string | string[] }>();
   const [query, setQuery] = useState(Array.isArray(searchQuery) ? searchQuery[0] ?? '' : searchQuery ?? '');
-  const services = servicesData as Service[];
+  const { services, isLoading, error, retry } = useServices();
   const selectedCategory = Array.isArray(category) ? category[0] : category;
 
   const filteredServices = useMemo(
@@ -34,12 +34,26 @@ export default function ServicesScreen() {
           value={query}
           onChangeText={setQuery}
           placeholder="Search services"
-          style={styles.input}
+          style={[styles.input, isInputFocused && styles.inputFocused]}
+          selectionColor={colors.primary}
+          placeholderTextColor={colors.textMuted}
+          onFocus={() => setIsInputFocused(true)}
+          onBlur={() => setIsInputFocused(false)}
           autoCapitalize="none"
           autoCorrect={false}
         />
 
-        {filteredServices.length === 0 ? (
+        {isLoading ? (
+          <ServiceLoadState status="loading" />
+        ) : error ? (
+          <ServiceLoadState status="error" message={error.message} onRetry={retry} />
+        ) : services.length === 0 ? (
+          <ServiceLoadState
+            status="empty"
+            message="There are no services to display right now."
+            onRetry={retry}
+          />
+        ) : filteredServices.length === 0 ? (
           <EmptyState
             title="No services found"
             message={
@@ -81,5 +95,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 14,
     paddingVertical: 12,
     marginBottom: 16,
+    color: colors.text,
+  },
+  inputFocused: {
+    borderColor: colors.primary,
   },
 });

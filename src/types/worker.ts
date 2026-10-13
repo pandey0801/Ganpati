@@ -1,4 +1,8 @@
-export type WorkerAvailability = 'Available' | 'Busy' | 'Unavailable';
+import { Service } from '@/types/service';
+
+export type WorkerAvailability = string;
+
+export type WorkerService = Pick<Service, 'id' | 'name' | 'category' | 'icon' | 'image'>;
 
 export interface Worker {
   id: string;
@@ -10,4 +14,5 @@ export interface Worker {
   description: string;
   availability: WorkerAvailability;
   rating?: number;
+  service?: WorkerService;
 }

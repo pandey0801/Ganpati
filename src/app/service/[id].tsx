@@ -13,11 +13,12 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import AppText from '@/components/common/AppText';
 import EmptyState from '@/components/common/EmptyState';
+import ServiceLoadState from '@/components/services/ServiceLoadState';
+import WorkerLoadState from '@/components/workers/WorkerLoadState';
+import WorkerImage from '@/components/workers/WorkerImage';
 import { colors } from '@/constants/colors';
-import servicesData from '@/data/services.json';
-import workersData from '@/data/workers.json';
-import { Service } from '@/types/service';
-import { Worker } from '@/types/worker';
+import { useServices } from '@/hooks/useServices';
+import { useWorkers } from '@/hooks/useWorkers';
 
 const featureItems = [
   { icon: 'shield-checkmark-outline', label: 'Verified Workers' },
@@ -28,11 +29,53 @@ const featureItems = [
 export default function ServiceDetailScreen() {
   const router = useRouter();
   const { id } = useLocalSearchParams<{ id: string }>();
-  const services = servicesData as Service[];
-  const workers = workersData as Worker[];
-
+  const { services, isLoading, error, retry } = useServices();
+  const {
+    workers: serviceWorkers,
+    isLoading: areWorkersLoading,
+    error: workersError,
+    retry: retryWorkers,
+  } = useWorkers({ serviceId: id });
   const service = services.find((item) => item.id === id);
-  const serviceWorkers = workers.filter((worker) => worker.serviceId === id);
+
+  const renderNavigationBar = () => (
+    <View style={styles.navBar}>
+      <Pressable
+        onPress={() => router.back()}
+        accessibilityRole="button"
+        style={styles.iconButton}
+      >
+        <Ionicons name="arrow-back" size={22} color={colors.text} />
+      </Pressable>
+
+      <AppText variant="subtitle" style={styles.navTitle}>
+        Ganpati
+      </AppText>
+
+      <Pressable
+        accessibilityRole="button"
+        style={styles.iconButton}
+        onPress={() => {}}
+      >
+        <Ionicons name="heart-outline" size={21} color={colors.text} />
+      </Pressable>
+    </View>
+  );
+
+  if (isLoading || error) {
+    return (
+      <SafeAreaView style={styles.safeArea}>
+        <View style={styles.stateContent}>
+          {renderNavigationBar()}
+          <ServiceLoadState
+            status={isLoading ? 'loading' : 'error'}
+            message={error?.message}
+            onRetry={error ? retry : undefined}
+          />
+        </View>
+      </SafeAreaView>
+    );
+  }
 
   if (!service) {
     return (
@@ -48,27 +91,7 @@ export default function ServiceDetailScreen() {
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.content}
       >
-        <View style={styles.navBar}>
-          <Pressable
-            onPress={() => router.back()}
-            accessibilityRole="button"
-            style={styles.iconButton}
-          >
-            <Ionicons name="arrow-back" size={22} color={colors.text} />
-          </Pressable>
-
-          <AppText variant="subtitle" style={styles.navTitle}>
-            Ganpati
-          </AppText>
-
-          <Pressable
-            accessibilityRole="button"
-            style={styles.iconButton}
-            onPress={() => {}}
-          >
-            <Ionicons name="heart-outline" size={21} color={colors.text} />
-          </Pressable>
-        </View>
+        {renderNavigationBar()}
 
         <View style={styles.bannerCard}>
           <View style={styles.bannerTextWrap}>
@@ -88,7 +111,7 @@ export default function ServiceDetailScreen() {
         <View style={styles.featureRow}>
           {featureItems.map((item) => (
             <View key={item.label} style={styles.featurePill}>
-              <Ionicons name={item.icon as keyof typeof Ionicons.glyphMap} size={14} color={colors.secondary} />
+              <Ionicons name={item.icon as keyof typeof Ionicons.glyphMap} size={14} color={colors.success} />
               <AppText style={styles.featureText}>{item.label}</AppText>
             </View>
           ))}
@@ -105,7 +128,15 @@ export default function ServiceDetailScreen() {
           </Pressable>
         </View>
 
-        {serviceWorkers.length === 0 ? (
+        {areWorkersLoading ? (
+          <WorkerLoadState status="loading" />
+        ) : workersError ? (
+          <WorkerLoadState
+            status="error"
+            message="Please check your connection and try again."
+            onRetry={retryWorkers}
+          />
+        ) : serviceWorkers.length === 0 ? (
           <EmptyState title="No workers available" message="Please check back later." />
         ) : (
           serviceWorkers.map((worker) => (
@@ -115,7 +146,7 @@ export default function ServiceDetailScreen() {
               onPress={() => router.push({ pathname: '/worker/[id]', params: { id: worker.id } })}
             >
               <View style={styles.cardTopRow}>
-                <Image source={{ uri: worker.image }} style={styles.avatar} />
+                <WorkerImage uri={worker.image} style={styles.avatar} />
 
                 <Pressable
                   accessibilityRole="button"
@@ -152,7 +183,7 @@ export default function ServiceDetailScreen() {
 
               <View style={styles.statusRow}>
                 <View style={styles.statusBadge}>
-                  <AppText style={styles.statusText}>Available Today</AppText>
+                  <AppText style={styles.statusText}>{worker.availability}</AppText>
                 </View>
               </View>
 
@@ -186,9 +217,15 @@ export default function ServiceDetailScreen() {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#F7F9F8',
+    backgroundColor: colors.background,
   },
   content: {
+    paddingHorizontal: 16,
+    paddingTop: 12,
+    paddingBottom: 28,
+  },
+  stateContent: {
+    flex: 1,
     paddingHorizontal: 16,
     paddingTop: 12,
     paddingBottom: 28,
@@ -207,7 +244,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderWidth: 1,
-    borderColor: '#E7EBF0',
+    borderColor: colors.border,
   },
   navTitle: {
     fontSize: 24,
@@ -218,13 +255,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    backgroundColor: '#EAF4FE',
+    backgroundColor: colors.primaryLight,
     borderRadius: 20,
     paddingHorizontal: 16,
     paddingVertical: 18,
     minHeight: 150,
     borderWidth: 1,
-    borderColor: '#DDEAFB',
+    borderColor: colors.border,
     shadowColor: '#0F172A',
     shadowOpacity: 0.04,
     shadowRadius: 10,
@@ -257,7 +294,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     overflow: 'hidden',
     borderWidth: 1,
-    borderColor: 'rgba(8, 123, 89, 0.08)',
+    borderColor: colors.border,
   },
   bannerImage: {
     width: 110,
@@ -276,7 +313,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.surface,
     borderRadius: 999,
     borderWidth: 1,
-    borderColor: '#E5E7EB',
+    borderColor: colors.border,
     paddingHorizontal: 10,
     paddingVertical: 8,
     flex: 1,
@@ -305,7 +342,7 @@ const styles = StyleSheet.create({
     gap: 6,
     backgroundColor: colors.surface,
     borderWidth: 1,
-    borderColor: '#E7EBF0',
+    borderColor: colors.border,
     borderRadius: 12,
     paddingHorizontal: 10,
     paddingVertical: 8,
@@ -338,17 +375,17 @@ const styles = StyleSheet.create({
     width: 62,
     height: 62,
     borderRadius: 14,
-    backgroundColor: '#EEF6F7',
+    backgroundColor: colors.primaryLight,
   },
   favoriteButton: {
     width: 30,
     height: 30,
     borderRadius: 10,
-    backgroundColor: '#F5F7F7',
+    backgroundColor: colors.background,
     alignItems: 'center',
     justifyContent: 'center',
     borderWidth: 1,
-    borderColor: '#E7EBF0',
+    borderColor: colors.border,
   },
   workerMeta: {
     marginBottom: 10,
@@ -393,7 +430,7 @@ const styles = StyleSheet.create({
     borderRadius: 999,
   },
   statusText: {
-    color: '#1E8E5A',
+    color: colors.success,
     fontSize: 11,
     fontWeight: '700',
   },
@@ -412,8 +449,8 @@ const styles = StyleSheet.create({
     borderWidth: 1,
   },
   callButton: {
-    backgroundColor: '#EFF5F2',
-    borderColor: '#E3F0EA',
+    backgroundColor: colors.primaryLight,
+    borderColor: colors.border,
   },
   callButtonText: {
     color: colors.text,
@@ -421,8 +458,8 @@ const styles = StyleSheet.create({
     fontWeight: '700',
   },
   whatsappButton: {
-    backgroundColor: colors.primary,
-    borderColor: colors.primary,
+    backgroundColor: colors.success,
+    borderColor: colors.success,
   },
   whatsappText: {
     color: colors.surface,

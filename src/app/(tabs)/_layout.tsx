@@ -71,8 +71,7 @@ export default function TabsLayout() {
         headerShown: false,
 
         // Tab colors
-        // tabBarActiveTintColor: colors.primary,
-        tabBarActiveTintColor: colors.brandGreen,
+        tabBarActiveTintColor: colors.primary,
         tabBarInactiveTintColor: colors.textMuted,
 
         // Bottom tab bar

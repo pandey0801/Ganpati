@@ -1,50 +1,58 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import {
   Dimensions,
   Image,
+  Linking,
   Pressable,
   ScrollView,
   StyleSheet,
   TextInput,
-  View,
-   Linking
+  View
 } from 'react-native';
 
 import { LinearGradient } from 'expo-linear-gradient';
 
-import { SafeAreaView } from 'react-native-safe-area-context';
 
 import AppText from '@/components/common/AppText';
+import ServiceLoadState from '@/components/services/ServiceLoadState';
 import { colors } from '@/constants/colors';
-import servicesData from '@/data/services.json';
+import { useServices } from '@/hooks/useServices';
 import { Service } from '@/types/service';
-import { filterServices } from '@/utils/search';
 
-const brandGreen = '#087B59';
-const cardBorder = '#E7EBF0';
+const cardBorder = colors.border;
 
-const categoryDefinitions = [
-  { id: 'ac-repair', name: 'AC Repair', icon: 'snow-outline', tint: '#EAF3FF' },
-  { id: 'electrical', name: 'Electrician', icon: 'flash-outline', tint: '#FFF8D8' },
-  { id: 'plumbing', name: 'Plumber', icon: 'water-outline', tint: '#EAF6F3' },
-  { id: 'painting', name: 'Painter', icon: 'brush-outline', tint: '#FDECF4' },
-  { id: 'cctv', name: 'CCTV', icon: 'videocam-outline', tint: '#EEF7FF' },
-  { id: 'carpenter', name: 'Carpenter', icon: 'construct-outline', tint: '#F6F4FF' },
-  { id: 'driver', name: 'Driver', icon: 'car-outline', tint: '#EEF8F2' },
-  { id: 'cleaning', name: 'Cleaning', icon: 'sparkles-outline', tint: '#EEF7FF' },
-  { id: 'home-appliance', name: 'Home Appliance', icon: 'tv-outline', tint: '#F5F1FF' },
-  { id: 'gardening', name: 'Gardening', icon: 'leaf-outline', tint: '#EAF9F2' },
-  { id: 'beauty-salon', name: 'Beauty & Salon', icon: 'sparkles-outline', tint: '#FFF1F7' },
-  { id: 'more', name: 'More', icon: 'ellipsis-horizontal', tint: '#F3F4F6' },
-] as const;
+interface CategoryPresentation {
+  id: string;
+  name: string;
+  icon: keyof typeof Ionicons.glyphMap;
+  tint: string;
+  order: number;
+}
 
-const popularCategories = categoryDefinitions.filter((category) =>
-  ['ac-repair', 'electrical', 'plumbing', 'painting'].includes(category.id),
-);
+interface HomeCategory {
+  id: string;
+  name: string;
+  icon?: keyof typeof Ionicons.glyphMap;
+  emoji: string;
+  tint: string;
+  order: number;
+}
 
-const allCategories = categoryDefinitions;
+const categoryPresentationByServiceId: Record<string, CategoryPresentation> = {
+  'ac-repair': { id: 'ac-repair', name: 'AC Repair', icon: 'snow-outline', tint: '#EAF3FF', order: 0 },
+  electrical: { id: 'electrical', name: 'Electrician', icon: 'flash-outline', tint: '#FFF8D8', order: 1 },
+  plumbing: { id: 'plumbing', name: 'Plumber', icon: 'water-outline', tint: '#EAF6F3', order: 2 },
+  painter: { id: 'painting', name: 'Painter', icon: 'brush-outline', tint: '#FDECF4', order: 3 },
+  cctv: { id: 'cctv', name: 'CCTV', icon: 'videocam-outline', tint: '#EEF7FF', order: 4 },
+  carpenter: { id: 'carpenter', name: 'Carpenter', icon: 'construct-outline', tint: '#F6F4FF', order: 5 },
+  driver: { id: 'driver', name: 'Driver', icon: 'car-outline', tint: '#EEF8F2', order: 6 },
+  cleaning: { id: 'cleaning', name: 'Cleaning', icon: 'sparkles-outline', tint: '#EEF7FF', order: 7 },
+  'home-appliance': { id: 'home-appliance', name: 'Home Appliance', icon: 'tv-outline', tint: '#F5F1FF', order: 8 },
+  gardening: { id: 'gardening', name: 'Gardening', icon: 'leaf-outline', tint: '#EAF9F2', order: 9 },
+  'beauty-salon': { id: 'beauty-salon', name: 'Beauty & Salon', icon: 'sparkles-outline', tint: '#FFF1F7', order: 10 },
+};
 
 const categoryToServiceId: Record<string, string> = {
   'ac-repair': 'ac-repair',
@@ -60,13 +68,44 @@ const categoryToServiceId: Record<string, string> = {
   'beauty-salon': 'beauty-salon',
 };
 
+const moreCategory = {
+  id: 'more',
+  name: 'More',
+  icon: 'ellipsis-horizontal' as keyof typeof Ionicons.glyphMap,
+  tint: '#F3F4F6',
+};
+
+function getHomeCategories(services: Service[]): HomeCategory[] {
+  return services
+    .map((service, index) => {
+      const presentation = categoryPresentationByServiceId[service.id];
+
+      return {
+        id: presentation?.id ?? service.id,
+        name: presentation?.name ?? service.name,
+        icon: presentation?.icon,
+        emoji: service.icon,
+        tint: presentation?.tint ?? '#F3F4F6',
+        order: presentation?.order ?? Object.keys(categoryPresentationByServiceId).length + index,
+      };
+    })
+    .sort((first, second) => first.order - second.order || first.name.localeCompare(second.name));
+}
+
 
 
 export default function HomeScreen() {
   const router = useRouter();
   const [searchText, setSearchText] = useState('');
+  const [isSearchFocused, setIsSearchFocused] = useState(false);
+  const { services, isLoading, error, retry } = useServices();
   const screenWidth = Dimensions.get('window').width;
   const gridItemWidth = (screenWidth - 32 - 3 * 10) / 4;
+  const homeCategories = useMemo(() => getHomeCategories(services), [services]);
+  const popularCategories = homeCategories.filter((category) =>
+    ['ac-repair', 'electrical', 'plumbing', 'painting'].includes(category.id),
+  );
+  const allCategories = [...homeCategories, { ...moreCategory, emoji: '', order: Number.MAX_SAFE_INTEGER }];
 
   const navigateToServices = (categoryId?: string, query?: string) => {
     if (!categoryId && !query) {
@@ -98,26 +137,7 @@ export default function HomeScreen() {
     navigateToServices(undefined, trimmedQuery);
   };
 
-  const services = servicesData as Service[];
-
-  // const searchResults = React.useMemo(() => {
-  //   const trimmedQuery = searchText.trim();
-
-  //   if (!trimmedQuery) {
-  //     return [];
-  //   }
-
-  //   return filterServices(services, trimmedQuery)
-  //     .slice(0, 8)
-  //     .map((service) => ({
-  //       id: service.id,
-  //       title: service.name,
-  //       subtitle: service.category ?? 'Service',
-  //       route: { pathname: '/service/[id]' as const, params: { id: service.id } },
-  //     }));
-  // }, [searchText, services]);
-
-  const searchResults = React.useMemo(() => {
+  const searchResults = useMemo(() => {
   const query = searchText.trim().toLowerCase();
 
   if (!query) {
@@ -148,7 +168,35 @@ export default function HomeScreen() {
         params: { id: service.id },
       },
     }));
-}, [searchText, services]);
+  }, [searchText, services]);
+
+  if (isLoading) {
+    return (
+      <View style={styles.safeArea}>
+        <ServiceLoadState status="loading" />
+      </View>
+    );
+  }
+
+  if (error) {
+    return (
+      <View style={styles.safeArea}>
+        <ServiceLoadState status="error" message={error.message} onRetry={retry} />
+      </View>
+    );
+  }
+
+  if (services.length === 0) {
+    return (
+      <View style={styles.safeArea}>
+        <ServiceLoadState
+          status="empty"
+          message="There are no services to display right now."
+          onRetry={retry}
+        />
+      </View>
+    );
+  }
 
   return (
     // <SafeAreaView style={styles.safeArea}>
@@ -171,7 +219,7 @@ export default function HomeScreen() {
           </Pressable>
         </View>
 
-        <View style={styles.searchBar}>
+        <View style={[styles.searchBar, isSearchFocused && styles.searchBarFocused]}>
           <Ionicons name="search-outline" size={18} color={colors.textMuted} />
           {/* <TextInput
             value={searchText}
@@ -190,6 +238,7 @@ export default function HomeScreen() {
               }
             }}
           /> */}
+
            <TextInput
               value={searchText}
               onChangeText={setSearchText}
@@ -200,6 +249,9 @@ export default function HomeScreen() {
               autoCorrect={false}
               returnKeyType="search"
               blurOnSubmit={false}
+              selectionColor={colors.primary}
+              onFocus={() => setIsSearchFocused(true)}
+              onBlur={() => setIsSearchFocused(false)}
               onSubmitEditing={handleSearchSubmit}
             />
         </View>
@@ -217,7 +269,7 @@ export default function HomeScreen() {
                   }}
                 >
                   <View style={styles.searchResultIcon}>
-                    <Ionicons name="construct-outline" size={18} color={brandGreen} />
+                    <Ionicons name="construct-outline" size={18} color={colors.primary} />
                   </View>
 
                   <View style={styles.searchResultText}>
@@ -256,7 +308,11 @@ export default function HomeScreen() {
               onPress={() => navigateToServiceDetail(category.id)}
             >
               <View style={[styles.categoryIconWrap, { backgroundColor: category.tint }]}>
-                <Ionicons name={category.icon as keyof typeof Ionicons.glyphMap} size={20} color={brandGreen} />
+                {category.icon ? (
+                  <Ionicons name={category.icon} size={20} color={colors.primary} />
+                ) : (
+                  <AppText style={styles.categoryEmoji}>{category.emoji}</AppText>
+                )}
               </View>
               <AppText style={styles.categoryLabel}>{category.name}</AppText>
             </Pressable>
@@ -276,7 +332,7 @@ export default function HomeScreen() {
                 style={styles.bannerAction}
                 onPress={() => navigateToServices()}
               >
-                <Ionicons name="arrow-forward" size={20} color={brandGreen} />
+                <Ionicons name="arrow-forward" size={20} color={colors.primary} />
               </Pressable>
             </View>
 
@@ -292,11 +348,10 @@ export default function HomeScreen() {
 
         <View style={styles.bannerWrapper}>
           <LinearGradient
-            // colors={['#298558', '#38B273']}
             // start={{ x: 0, y: 0 }}
             // end={{ x: 1, y: 0 }}
             // style={styles.banner}
-            colors={['#2E7D52', '#5BC68E']} 
+            colors={[colors.primaryLight, colors.primary]}
             start={{ x: 0, y: 0 }} // Starts at the far left
             end={{ x: 1, y: 0 }}   // Ends at the far right
             style={styles.banner}
@@ -312,7 +367,7 @@ export default function HomeScreen() {
                 style={styles.bannerAction}
                 onPress={() => navigateToServices()}
               >
-                <Ionicons name="arrow-forward" size={20} color={brandGreen} />
+                <Ionicons name="arrow-forward" size={20} color={colors.primary} />
               </Pressable>
             </View>
 
@@ -338,7 +393,11 @@ export default function HomeScreen() {
               onPress={() => navigateToServiceDetail(category.id)}
             >
               <View style={[styles.gridIconWrap, { backgroundColor: category.tint }]}>
-                <Ionicons name={category.icon as keyof typeof Ionicons.glyphMap} size={17} color={brandGreen} />
+                {category.icon ? (
+                  <Ionicons name={category.icon} size={17} color={colors.primary} />
+                ) : (
+                  <AppText style={styles.categoryEmoji}>{category.emoji}</AppText>
+                )}
               </View>
               <AppText style={styles.gridLabel} numberOfLines={2}>{category.name}</AppText>
             </Pressable>
@@ -347,10 +406,10 @@ export default function HomeScreen() {
 
         <Pressable style={styles.otherServicesButton} onPress={() => navigateToServices()}>
           <View style={styles.otherServicesLeft}>
-            <Ionicons name="grid-outline" size={18} color={colors.surface} />
+            <Ionicons name="grid-outline" size={18} color={colors.text} />
             <AppText style={styles.otherServicesText}>Other Services</AppText>
           </View>
-          <Ionicons name="chevron-forward" size={18} color={colors.surface} />
+          <Ionicons name="chevron-forward" size={18} color={colors.text} />
         </Pressable>
 
         <Pressable
@@ -365,7 +424,7 @@ export default function HomeScreen() {
           }}
         >
           <View style={styles.promoContent}>
-            <Ionicons name="logo-whatsapp" size={20} color="#25D366" />
+            <Ionicons name="logo-whatsapp" size={20} color={colors.success} />
 
             <AppText style={styles.promoText}>
               Want to list your business? WhatsApp us at{' '}
@@ -373,6 +432,22 @@ export default function HomeScreen() {
             </AppText>
           </View>
         </Pressable>
+
+        <Pressable
+  onPress={() => router.push('/supabase-test')}
+  style={{
+    backgroundColor: colors.primary,
+    padding: 14,
+    margin: 16,
+    borderRadius: 10,
+    alignItems: 'center',
+  }}
+>
+  <AppText style={{ color: colors.text, fontWeight: 'bold' }}>
+    Test Supabase
+  </AppText>
+</Pressable>
+
       </ScrollView>
     </View>
   );
@@ -381,7 +456,7 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#F8FAF9',
+    backgroundColor: colors.background,
   },
   content: {
     paddingHorizontal: 16,
@@ -402,7 +477,7 @@ const styles = StyleSheet.create({
   brandName: {
     fontSize: 28,
     fontWeight: '800',
-    color: brandGreen,
+    color: colors.primary,
     lineHeight: 32,
   },
   locationRow: {
@@ -437,7 +512,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.surface,
     borderRadius: 16,
     borderWidth: 1,
-    borderColor: '#E7ECEF',
+    borderColor: colors.border,
     height: 52,
     paddingHorizontal: 14,
     shadowColor: '#17212B',
@@ -445,6 +520,9 @@ const styles = StyleSheet.create({
     shadowRadius: 10,
     shadowOffset: { width: 0, height: 3 },
     elevation: 2,
+  },
+  searchBarFocused: {
+    borderColor: colors.primary,
   },
   searchInput: {
     flex: 1,
@@ -467,7 +545,7 @@ const styles = StyleSheet.create({
     color: colors.text,
   },
   seeAll: {
-    color: brandGreen,
+    color: colors.primary,
     fontSize: 13,
     fontWeight: '700',
   },
@@ -491,6 +569,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginBottom: 8,
   },
+  categoryEmoji: {
+    fontSize: 22,
+  },
   categoryLabel: {
     fontSize: 12,
     fontWeight: '600',
@@ -507,7 +588,7 @@ bannerWrapper: {
 // banner: {
 //   height: 150,
 //   width: '100%',
-//   backgroundColor: brandGreen,
+//   backgroundColor: colors.primary,
 //   borderRadius: 20,
 //   overflow: 'hidden',
 
@@ -515,7 +596,7 @@ bannerWrapper: {
 //   alignItems: 'stretch',
 //   justifyContent: 'space-between',
 
-//   shadowColor: '#0A291B',
+//   shadowColor: '#C65D0A',
 //   shadowOpacity: 0.12,
 //   shadowRadius: 12,
 //   shadowOffset: {
@@ -533,8 +614,8 @@ banner: {
     flexDirection: 'row',
     alignItems: 'stretch',
     justifyContent: 'space-between',
-    // backgroundColor: brandGreen, <-- Removed because of LinearGradient
-    shadowColor: '#0A291B',
+    // backgroundColor is supplied by the banner gradient.
+    shadowColor: colors.primaryDark,
     shadowOpacity: 0.12,
     shadowRadius: 12,
     shadowOffset: {
@@ -553,7 +634,7 @@ bannerContent: {
 },
 
 bannerTitle: {
-  color: colors.surface,
+  color: colors.text,
   fontSize: 18,
   lineHeight: 23,
   fontWeight: '800',
@@ -561,7 +642,7 @@ bannerTitle: {
 
 bannerSubtitle: {
   marginTop: 6,
-  color: 'rgba(255,255,255,0.9)',
+  color: colors.text,
   fontSize: 11,
   fontWeight: '600',
   letterSpacing: 0.2,
@@ -675,7 +756,7 @@ bannerImage: {
     width: 30,
     height: 30,
     borderRadius: 15,
-    backgroundColor: '#E7F9F1',
+    backgroundColor: '#FFE1C7',
     position: 'absolute',
     top: 16,
   },
@@ -683,7 +764,7 @@ bannerImage: {
     width: 52,
     height: 58,
     borderRadius: 22,
-    backgroundColor: '#D5F0E3',
+    backgroundColor: '#FAD0A8',
     position: 'absolute',
     top: 38,
   },
@@ -691,7 +772,7 @@ bannerImage: {
     width: 18,
     height: 18,
     borderRadius: 9,
-    backgroundColor: '#A7E6C9',
+    backgroundColor: '#F4B77F',
     position: 'absolute',
     right: 16,
     top: 46,
@@ -736,13 +817,13 @@ bannerImage: {
   otherServicesButton: {
     marginTop: 20,
     height: 48,
-    backgroundColor: brandGreen,
+    backgroundColor: colors.primary,
     borderRadius: 14,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: 16,
-    shadowColor: '#0A291B',
+    shadowColor: colors.primaryDark,
     shadowOpacity: 0.1,
     shadowRadius: 12,
     shadowOffset: { width: 0, height: 6 },
@@ -754,13 +835,13 @@ bannerImage: {
     gap: 8,
   },
   otherServicesText: {
-    color: colors.surface,
+    color: colors.text,
     fontSize: 15,
     fontWeight: '700',
   },
   
 promoBanner: {
-  backgroundColor: '#E8F5E9',
+  backgroundColor: colors.primaryLight,
   borderRadius: 12,
   paddingVertical: 12,
   paddingHorizontal: 16,
@@ -768,7 +849,7 @@ promoBanner: {
   marginTop: 16,
   marginBottom: 0,
   borderWidth: 1,
-  borderColor: '#C8E6C9',
+  borderColor: '#F4D1B2',
 },
 promoContent: {
   flexDirection: 'row',
@@ -777,12 +858,12 @@ promoContent: {
 },
 promoText: {
   fontSize: 13,
-  color: '#2E7D32',
+  color: colors.text,
   flex: 1,
 },
 promoPhone: {
   fontWeight: 'bold',
-  color: '#1B5E20',
+  color: colors.text,
 },
 
 searchResults: {
@@ -808,7 +889,7 @@ searchResultIcon: {
   width: 38,
   height: 38,
   borderRadius: 19,
-  backgroundColor: '#EAF6F3',
+  backgroundColor: colors.primaryLight,
   alignItems: 'center',
   justifyContent: 'center',
   marginRight: 12,
@@ -838,4 +919,3 @@ noSearchResultText: {
   color: colors.textMuted,
 },
 });
-

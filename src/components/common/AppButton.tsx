@@ -16,7 +16,7 @@ export default function AppButton({ title, variant = 'primary', style, ...props 
       style={({ pressed }) => [
         styles.button,
         styles[variant],
-        pressed && styles.pressed,
+        pressed && (variant === 'primary' ? styles.primaryPressed : styles.pressed),
         style,
       ]}
       {...props}
@@ -38,7 +38,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.primary,
   },
   secondary: {
-    backgroundColor: colors.surfaceAlt,
+    backgroundColor: colors.primaryLight,
   },
   outline: {
     backgroundColor: 'transparent',
@@ -48,8 +48,12 @@ const styles = StyleSheet.create({
   pressed: {
     opacity: 0.85,
   },
+  primaryPressed: {
+    borderWidth: 1,
+    borderColor: colors.primaryDark,
+  },
   text: {
-    color: '#fff',
+    color: colors.text,
     fontWeight: '600',
   },
 });

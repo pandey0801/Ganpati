@@ -1,7 +1,8 @@
 import React from 'react';
-import { Image, Pressable, StyleSheet, View } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 
 import AppText from '@/components/common/AppText';
+import WorkerImage from '@/components/workers/WorkerImage';
 import { colors } from '@/constants/colors';
 import { Worker } from '@/types/worker';
 
@@ -13,7 +14,7 @@ interface WorkerCardProps {
 export default function WorkerCard({ worker, onPress }: WorkerCardProps) {
   return (
     <Pressable onPress={onPress} style={styles.card}>
-      <Image source={{ uri: worker.image }} style={styles.image} />
+      <WorkerImage uri={worker.image} style={styles.image} />
       <View style={styles.info}>
         <AppText variant="subtitle">{worker.name}</AppText>
         <AppText variant="caption" style={styles.location}>{worker.location}</AppText>
