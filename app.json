@@ -31,7 +31,17 @@
           "image": "./assets/images/splash-icon.png",
           "imageWidth": 76
         }
-      ]
+      ],
+      "expo-image",
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Allow Ganpati Suvidha to access photos so you can add a profile picture.",
+          "cameraPermission": "Allow Ganpati Suvidha to use the camera to take a profile picture.",
+          "microphonePermission": false
+        }
+      ],
+      "expo-web-browser"
     ],
     "experiments": {
       "typedRoutes": true,

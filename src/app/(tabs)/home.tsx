@@ -4,7 +4,6 @@ import React, { useMemo, useState } from 'react';
 import {
   Dimensions,
   Image,
-  Linking,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -413,23 +412,25 @@ export default function HomeScreen() {
         </Pressable>
 
         <Pressable
+          accessibilityRole="button"
+          accessibilityLabel="List Your Business. Register as a Worker"
           style={styles.promoBanner}
-          onPress={() => {
-            const phone = '918223940122';
-            const message = 'Hello, I want to list my business on Ganpati.';
-
-            Linking.openURL(
-              `https://wa.me/${phone}?text=${encodeURIComponent(message)}`
-            );
-          }}
+          onPress={() => router.push('/worker/register')}
         >
           <View style={styles.promoContent}>
-            <Ionicons name="logo-whatsapp" size={20} color={colors.success} />
-
-            <AppText style={styles.promoText}>
-              Want to list your business? WhatsApp us at{' '}
-              <AppText style={styles.promoPhone}>9815432763</AppText>
-            </AppText>
+            <View style={styles.promoIcon}>
+              <Ionicons name="briefcase-outline" size={22} color={colors.primary} />
+            </View>
+            <View style={styles.promoTextWrap}>
+              <AppText style={styles.promoTitle}>List Your Business</AppText>
+              <AppText style={styles.promoText}>
+                Join our network of trusted local workers.
+              </AppText>
+              <View style={styles.promoButton}>
+                <AppText style={styles.promoButtonText}>Register as a Worker</AppText>
+                <Ionicons name="arrow-forward" size={16} color={colors.text} />
+              </View>
+            </View>
           </View>
         </Pressable>
 
@@ -842,9 +843,9 @@ bannerImage: {
   
 promoBanner: {
   backgroundColor: colors.primaryLight,
-  borderRadius: 12,
-  paddingVertical: 12,
-  paddingHorizontal: 16,
+  borderRadius: 16,
+  paddingVertical: 16,
+  paddingHorizontal: 14,
   marginHorizontal: 16,
   marginTop: 16,
   marginBottom: 0,
@@ -853,17 +854,47 @@ promoBanner: {
 },
 promoContent: {
   flexDirection: 'row',
-  alignItems: 'center',
-  gap: 10,
+  alignItems: 'flex-start',
+  gap: 12,
 },
-promoText: {
-  fontSize: 13,
-  color: colors.text,
+promoIcon: {
+  width: 44,
+  height: 44,
+  borderRadius: 14,
+  backgroundColor: colors.surface,
+  alignItems: 'center',
+  justifyContent: 'center',
+},
+promoTextWrap: {
   flex: 1,
 },
-promoPhone: {
-  fontWeight: 'bold',
+promoTitle: {
+  fontSize: 16,
+  lineHeight: 21,
+  fontWeight: '700',
   color: colors.text,
+},
+promoText: {
+  marginTop: 3,
+  fontSize: 13,
+  lineHeight: 18,
+  color: colors.textMuted,
+},
+promoButton: {
+  alignSelf: 'flex-start',
+  flexDirection: 'row',
+  alignItems: 'center',
+  gap: 8,
+  marginTop: 12,
+  backgroundColor: colors.primary,
+  borderRadius: 12,
+  paddingHorizontal: 13,
+  paddingVertical: 10,
+},
+promoButtonText: {
+  color: colors.text,
+  fontSize: 13,
+  fontWeight: '700',
 },
 
 searchResults: {

@@ -10,6 +10,7 @@ export default function RootLayout() {
         {/* <Stack.Screen name="onboarding" /> */}
         <Stack.Screen name="(tabs)" />
         <Stack.Screen name="service/[id]" />
+        <Stack.Screen name="worker/register" />
         <Stack.Screen name="worker/[id]" />
       </Stack>
     </SafeAreaProvider>
