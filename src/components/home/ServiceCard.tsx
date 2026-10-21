@@ -3,7 +3,9 @@ import { Image, Pressable, StyleSheet, View } from 'react-native';
 
 import AppText from '@/components/common/AppText';
 import { colors } from '@/constants/colors';
+import { translateServiceName } from '@/i18n/serviceNames';
 import { Service } from '@/types/service';
+import { useTranslation } from 'react-i18next';
 
 interface ServiceCardProps {
   service: Service;
@@ -11,12 +13,14 @@ interface ServiceCardProps {
 }
 
 export default function ServiceCard({ service, onPress }: ServiceCardProps) {
+  const { t } = useTranslation();
+
   return (
     <Pressable onPress={onPress} style={styles.card}>
       <Image source={{ uri: service.image }} style={styles.image} />
       <View style={styles.info}>
         <AppText variant="caption" style={styles.icon}>{service.icon}</AppText>
-        <AppText variant="subtitle">{service.name}</AppText>
+        <AppText variant="subtitle">{translateServiceName(service.id, service.name, t)}</AppText>
         <AppText variant="small" style={styles.descriptionNumberOfLines}>
           {service.description}
         </AppText>

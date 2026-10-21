@@ -1,0 +1,231 @@
+{
+  "language": {
+    "hindi": "हिंदी",
+    "english": "English",
+    "switchToHindi": "भाषा हिंदी में बदलें",
+    "switchToEnglish": "भाषा अंग्रेज़ी में बदलें",
+    "saveErrorTitle": "भाषा की पसंद सेव नहीं हुई",
+    "saveErrorMessage": "भाषा बदल गई है, लेकिन आपकी पसंद सेव नहीं हो सकी। कृपया फिर से कोशिश करें।"
+  },
+  "navigation": {
+    "home": "होम",
+    "services": "सेवाएँ",
+    "search": "खोजें",
+    "explore": "देखें",
+    "brand": "गणपति"
+  },
+  "common": {
+    "back": "वापस",
+    "backToHome": "होम पर जाएँ",
+    "goBack": "पिछली स्क्रीन पर जाएँ",
+    "tryAgain": "फिर से कोशिश करें",
+    "loading": "लोड हो रहा है…",
+    "checkConnection": "कृपया इंटरनेट कनेक्शन जाँचें और फिर से कोशिश करें।",
+    "service": "सेवा",
+    "tryEditing": "बदलकर देखें"
+  },
+  "home": {
+    "location": "अंबिकापुर, छत्तीसगढ़",
+    "notification": "सूचनाएँ",
+    "searchPlaceholder": "सेवाएँ खोजें",
+    "noServicesFound": "कोई सेवा नहीं मिली",
+    "popularCategories": "लोकप्रिय श्रेणियाँ",
+    "seeAll": "सभी देखें",
+    "bannerTitle": "भरोसेमंद स्थानीय\nकामगार, आपकी\nज़रूरत के लिए",
+    "bannerSubtitle": "तेज़ • भरोसेमंद • किफ़ायती",
+    "allCategories": "सभी श्रेणियाँ",
+    "more": "और",
+    "otherServices": "अन्य सेवाएँ",
+    "listBusiness": "अपना काम सूचीबद्ध करें",
+    "listBusinessSubtitle": "भरोसेमंद स्थानीय कामगारों के हमारे नेटवर्क से जुड़ें।",
+    "registerWorker": "कामगार के रूप में पंजीकरण करें",
+    "testSupabase": "Supabase जाँचें"
+  },
+  "services": {
+    "title": "सेवाएँ",
+    "subtitle": "अपनी ज़रूरत की मदद पाएँ",
+    "searchPlaceholder": "सेवाएँ खोजें",
+    "noneAvailable": "अभी दिखाने के लिए कोई सेवा उपलब्ध नहीं है।",
+    "notFoundTitle": "कोई सेवा नहीं मिली",
+    "categoryOrSearch": "दूसरी श्रेणी या शब्द से खोजें।",
+    "searchOrBrowse": "दूसरी खोज करें या सभी श्रेणियाँ देखें।"
+  },
+  "search": {
+    "title": "खोजें",
+    "subtitle": "अपने आस-पास कामगार खोजें",
+    "placeholder": "नाम, जगह या काम से खोजें",
+    "noWorkersTitle": "कोई कामगार नहीं मिला",
+    "noWorkersMessage": "दूसरा शब्द या जगह लिखकर खोजें।"
+  },
+  "serviceDetail": {
+    "notFoundTitle": "सेवा नहीं मिली",
+    "notFoundMessage": "यह सेवा नहीं मिल सकी।",
+    "defaultCategory": "आपके घर तक कूलिंग सेवाएँ",
+    "verifiedWorkers": "सत्यापित कामगार",
+    "trustedLocal": "भरोसेमंद और स्थानीय",
+    "affordablePricing": "किफ़ायती दाम",
+    "workersFound": "{{count}} कामगार मिले",
+    "sort": "क्रम",
+    "experience": "5+ साल का अनुभव",
+    "call": "कॉल करें",
+    "whatsapp": "WhatsApp",
+    "noWorkers": "अभी कोई कामगार उपलब्ध नहीं है",
+    "checkBack": "कृपया बाद में फिर देखें।"
+  },
+  "workerDetail": {
+    "notFound": "कामगार नहीं मिला"
+  },
+  "workerInfo": {
+    "about": "जानकारी",
+    "location": "जगह",
+    "phone": "फ़ोन",
+    "availability": "उपलब्धता"
+  },
+  "availability": {
+    "available": "उपलब्ध",
+    "busy": "व्यस्त",
+    "unavailable": "अनुपलब्ध",
+    "notAvailable": "उपलब्ध नहीं"
+  },
+  "contact": {
+    "call": "कॉल करें",
+    "message": "संदेश"
+  },
+  "workerLoad": {
+    "loading": "कामगार लोड हो रहे हैं…",
+    "error": "कामगार लोड नहीं हो सके",
+    "empty": "कोई कामगार उपलब्ध नहीं है"
+  },
+  "serviceLoad": {
+    "loading": "सेवाएँ लोड हो रही हैं…",
+    "error": "सेवाएँ लोड नहीं हो सकीं",
+    "empty": "कोई सेवा उपलब्ध नहीं है"
+  },
+  "registration": {
+    "title": "कामगार के रूप में पंजीकरण करें",
+    "subtitle": "हमारे भरोसेमंद स्थानीय नेटवर्क से जुड़ने के लिए अपनी जानकारी दें।",
+    "successTitle": "पंजीकरण भेज दिया गया",
+    "successMessage": "आपका पंजीकरण सफलतापूर्वक भेज दिया गया है। ऐप में आपकी प्रोफ़ाइल दिखने से पहले हमारी टीम आपकी जानकारी की जाँच करेगी।",
+    "detailsTitle": "आपकी जानकारी",
+    "fullName": "पूरा नाम *",
+    "fullNamePlaceholder": "अपना पूरा नाम लिखें",
+    "mobile": "मोबाइल नंबर *",
+    "mobilePlaceholder": "10 अंकों का भारतीय मोबाइल नंबर",
+    "alternateMobile": "दूसरा मोबाइल नंबर (वैकल्पिक)",
+    "alternateMobilePlaceholder": "दूसरा मोबाइल नंबर",
+    "category": "सेवा की श्रेणी *",
+    "location": "शहर / मोहल्ला या सेवा का स्थान *",
+    "locationPlaceholder": "जैसे: अंबिकापुर, छत्तीसगढ़",
+    "description": "आप कौन-सा काम करते हैं, संक्षेप में बताएँ *",
+    "descriptionPlaceholder": "अपनी सेवाओं और हुनर के बारे में बताएँ",
+    "experience": "काम का अनुभव (वैकल्पिक, साल में)",
+    "experiencePlaceholder": "जैसे: 5",
+    "photo": "प्रोफ़ाइल फ़ोटो *",
+    "chooseGallery": "गैलरी से चुनें",
+    "takePhoto": "फ़ोटो लें",
+    "compressing": "फ़ोटो तैयार हो रही है…",
+    "photoFormats": "JPEG, PNG, WebP या HEIC। निजी रूप से अपलोड करने से पहले फ़ोटो छोटी की जाएगी।",
+    "submitting": "फ़ोटो अपलोड और पंजीकरण भेजा जा रहा है…",
+    "submit": "पंजीकरण भेजें",
+    "privacy": "जाँच पूरी होने तक आपकी फ़ोटो और जानकारी निजी रहेंगी।",
+    "loadingCategories": "सेवा श्रेणियाँ लोड हो रही हैं…",
+    "categoriesUnavailable": "सेवा श्रेणियाँ लोड नहीं हो सकीं। अपना कनेक्शन जाँचें।",
+    "noCategories": "अभी कोई सेवा श्रेणी उपलब्ध नहीं है।",
+    "cameraPermission": "प्रोफ़ाइल फ़ोटो लेने के लिए कैमरे की अनुमति ज़रूरी है।",
+    "galleryPermission": "प्रोफ़ाइल फ़ोटो चुनने के लिए फ़ोटो लाइब्रेरी की अनुमति ज़रूरी है।",
+    "cameraCancelled": "कैमरा बंद कर दिया गया। तैयार होने पर फ़ोटो चुनें या लें।",
+    "galleryCancelled": "फ़ोटो चुनना रद्द कर दिया गया। तैयार होने पर फ़ोटो चुनें या लें।",
+    "pickerFailed": "फ़ोटो चुनने का विकल्प नहीं खुला। अनुमति जाँचकर फिर से कोशिश करें।",
+    "photoVideo": "वीडियो के बजाय कोई इमेज फ़ाइल चुनें।",
+    "photoFormatError": "JPEG, PNG, WebP या HEIC फ़ोटो चुनें।",
+    "photoSourceSizeError": "15 MB से छोटी फ़ोटो चुनें।",
+    "photoDimensionsError": "इस फ़ोटो का आकार सही नहीं है। दूसरी फ़ोटो चुनें।",
+    "photoReadError": "तैयार की गई फ़ोटो पढ़ी नहीं जा सकी।",
+    "photoUploadSizeError": "छोटी की गई फ़ोटो 4 MB से कम होनी चाहिए। दूसरी फ़ोटो चुनें।",
+    "photoProcessError": "फ़ोटो तैयार नहीं हो सकी। कृपया दूसरी फ़ोटो चुनें।",
+    "submitError": "पंजीकरण नहीं भेजा जा सका। कृपया फिर से कोशिश करें।",
+    "rateLimited": "पंजीकरण के बहुत अधिक प्रयास हुए हैं। कृपया बाद में फिर कोशिश करें।",
+    "serverError": "पंजीकरण सेवा अभी उपलब्ध नहीं है। कृपया बाद में फिर कोशिश करें।",
+    "validation": {
+      "fullName": "अपना पूरा नाम लिखें (2–100 अक्षर)।",
+      "mobile": "10 अंकों का सही भारतीय मोबाइल नंबर लिखें।",
+      "category": "सेवा की श्रेणी चुनें।",
+      "location": "शहर, मोहल्ला या सेवा का स्थान लिखें।",
+      "description": "अपने काम के बारे में 10–500 अक्षरों में बताएँ।",
+      "experience": "0 से 60 तक पूरा अंक लिखें।",
+      "photo": "आगे बढ़ने के लिए प्रोफ़ाइल फ़ोटो जोड़ें।"
+    }
+  },
+  "onboarding": {
+    "getStarted": "शुरू करते हैं",
+    "browse": "घर की सेवाएँ देखें, विशेषज्ञों की तुलना करें और सही मदद से जल्दी जुड़ें।",
+    "continue": "आगे बढ़ें",
+    "welcome": "आपका स्वागत है",
+    "explore": "ऐप छोड़े बिना अपने इलाके के अच्छे पेशेवर खोजें और सही मदद पाएँ।",
+    "openHome": "होम खोलें"
+  },
+  "splash": {
+    "tagline": "कुशल कामगार, मज़बूत समुदाय",
+    "loading": "लोड हो रहा है…",
+    "location": "अंबिकापुर"
+  },
+  "explore": {
+    "title": "देखें",
+    "description": "शुरुआत करने के लिए इस ऐप में\nउदाहरण कोड दिया गया है।",
+    "documentation": "Expo का दस्तावेज़",
+    "fileRouting": "फ़ाइल-आधारित नेविगेशन",
+    "fileRoutingText": "इस ऐप में दो स्क्रीन हैं: {{index}} और {{explore}}",
+    "layoutText": "नेविगेशन लेआउट फ़ाइल {{layout}} टैब सेट करती है।",
+    "platformSupport": "Android, iOS और वेब सपोर्ट",
+    "platformText": "यह प्रोजेक्ट Android, iOS और वेब पर चल सकता है। वेब संस्करण खोलने के लिए दबाएँ",
+    "terminalText": "टर्मिनल में, जहाँ ऐप चल रहा है।",
+    "images": "इमेज",
+    "staticImagesText": "स्टैटिक इमेज के लिए ये सफ़िक्स इस्तेमाल करें:",
+    "suffixText": "ताकि अलग-अलग स्क्रीन घनत्व पर सही इमेज दिखाई दे।",
+    "lightDark": "लाइट और डार्क मोड",
+    "themeText": "इस टेम्पलेट में लाइट और डार्क मोड है।",
+    "themeHookText": "हुक से मौजूदा रंग योजना पता करके रंग बदले जा सकते हैं।",
+    "animations": "एनिमेशन",
+    "animationText": "इस टेम्पलेट में एनिमेटेड कॉम्पोनेंट का उदाहरण है।",
+    "animationLibraryText": "कॉम्पोनेंट",
+    "animationEndText": "लाइब्रेरी से संकेत को खोलने का एनिमेशन दिखाता है।",
+    "learnMore": "और जानें"
+  },
+  "supabaseTest": {
+    "connecting": "Supabase से कनेक्ट हो रहा है…",
+    "connectionError": "कनेक्शन या क्वेरी पूरी नहीं हुई",
+    "title": "Supabase कनेक्शन जाँच",
+    "success": "✓ क्वेरी सफलतापूर्वक पूरी हुई",
+    "servicesFetched": "मिली सेवाएँ: {{count}}",
+    "empty": "कोई सेवा नहीं मिली। टेबल का डेटा जाँचें।",
+    "category": "श्रेणी: {{category}}",
+    "notSpecified": "नहीं दी गई",
+    "noDescription": "कोई विवरण नहीं",
+    "unableToFetch": "सेवाएँ नहीं मिल सकीं"
+  },
+  "serviceNames": {
+    "acRepair": "एसी मरम्मत",
+    "electrician": "इलेक्ट्रीशियन",
+    "plumber": "प्लंबर",
+    "painter": "पेंटर",
+    "cctv": "सीसीटीवी",
+    "carpenter": "बढ़ई",
+    "driver": "ड्राइवर",
+    "cleaning": "सफ़ाई",
+    "homeAppliance": "घरेलू उपकरण",
+    "gardening": "बागवानी",
+    "beautySalon": "ब्यूटी और सैलून",
+    "constructionWorker": "निर्माण कामगार"
+  },
+  "serviceCategories": {
+    "homeMaintenance": "घरेलू रखरखाव",
+    "housekeeping": "घर की देखभाल",
+    "outdoorCare": "बाहरी जगह की देखभाल",
+    "homeImprovement": "घर सुधार",
+    "securityServices": "सुरक्षा सेवाएँ",
+    "transportation": "परिवहन",
+    "homeAppliances": "घरेलू उपकरण",
+    "personalCare": "व्यक्तिगत देखभाल",
+    "construction": "निर्माण"
+  }
+}

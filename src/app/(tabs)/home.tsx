@@ -1,7 +1,9 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
-import React, { useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
+  Alert,
   Dimensions,
   Image,
   Pressable,
@@ -18,6 +20,8 @@ import AppText from '@/components/common/AppText';
 import ServiceLoadState from '@/components/services/ServiceLoadState';
 import { colors } from '@/constants/colors';
 import { useServices } from '@/hooks/useServices';
+import { setAppLanguage } from '@/i18n';
+import { translateServiceCategory, translateServiceName } from '@/i18n/serviceNames';
 import { Service } from '@/types/service';
 
 const cardBorder = colors.border;
@@ -74,14 +78,17 @@ const moreCategory = {
   tint: '#F3F4F6',
 };
 
-function getHomeCategories(services: Service[]): HomeCategory[] {
+function getHomeCategories(
+  services: Service[],
+  t: ReturnType<typeof useTranslation>['t'],
+): HomeCategory[] {
   return services
     .map((service, index) => {
       const presentation = categoryPresentationByServiceId[service.id];
 
       return {
         id: presentation?.id ?? service.id,
-        name: presentation?.name ?? service.name,
+        name: translateServiceName(service.id, presentation?.name ?? service.name, t),
         icon: presentation?.icon,
         emoji: service.icon,
         tint: presentation?.tint ?? '#F3F4F6',
@@ -95,16 +102,20 @@ function getHomeCategories(services: Service[]): HomeCategory[] {
 
 export default function HomeScreen() {
   const router = useRouter();
+  const { t, i18n } = useTranslation();
   const [searchText, setSearchText] = useState('');
   const [isSearchFocused, setIsSearchFocused] = useState(false);
   const { services, isLoading, error, retry } = useServices();
   const screenWidth = Dimensions.get('window').width;
   const gridItemWidth = (screenWidth - 32 - 3 * 10) / 4;
-  const homeCategories = useMemo(() => getHomeCategories(services), [services]);
+  const homeCategories = useMemo(() => getHomeCategories(services, t), [services, t]);
   const popularCategories = homeCategories.filter((category) =>
     ['ac-repair', 'electrical', 'plumbing', 'painting'].includes(category.id),
   );
-  const allCategories = [...homeCategories, { ...moreCategory, emoji: '', order: Number.MAX_SAFE_INTEGER }];
+  const allCategories = [
+    ...homeCategories,
+    { ...moreCategory, name: t('home.more'), emoji: '', order: Number.MAX_SAFE_INTEGER },
+  ];
 
   const navigateToServices = (categoryId?: string, query?: string) => {
     if (!categoryId && !query) {
@@ -136,6 +147,48 @@ export default function HomeScreen() {
     navigateToServices(undefined, trimmedQuery);
   };
 
+  const handleLanguageToggle = () => {
+    const nextLanguage = i18n.language === 'hi' ? 'en' : 'hi';
+    void setAppLanguage(nextLanguage).catch((cause: unknown) => {
+      console.error('Unable to save language preference:', cause);
+      Alert.alert(t('language.saveErrorTitle'), t('language.saveErrorMessage'));
+    });
+  };
+
+  const renderHeader = () => (
+    <View style={styles.headerRow}>
+      <View style={styles.headerTextWrap}>
+        <AppText style={styles.brandName}>Ganpati</AppText>
+        <View style={styles.locationRow}>
+          <AppText style={styles.locationText}>📍 {t('home.location')}</AppText>
+          <Ionicons name="chevron-down" size={12} color={colors.textMuted} />
+        </View>
+      </View>
+
+      <View style={styles.headerActions}>
+        <Pressable
+          style={styles.languageButton}
+          accessibilityRole="button"
+          accessibilityLabel={t(i18n.language === 'hi' ? 'language.switchToEnglish' : 'language.switchToHindi')}
+          hitSlop={4}
+          onPress={handleLanguageToggle}
+        >
+          <AppText style={styles.languageButtonText}>
+            {t(i18n.language === 'hi' ? 'language.english' : 'language.hindi')}
+          </AppText>
+        </Pressable>
+        <Pressable
+          style={styles.notificationButton}
+          accessibilityRole="button"
+          accessibilityLabel={t('home.notification')}
+          onPress={() => {}}
+        >
+          <Ionicons name="notifications-outline" size={20} color={colors.textMuted} />
+        </Pressable>
+      </View>
+    </View>
+  );
+
   const searchResults = useMemo(() => {
   const query = searchText.trim().toLowerCase();
 
@@ -149,30 +202,37 @@ export default function HomeScreen() {
       const description = service.description?.toLowerCase() ?? '';
       const category = service.category?.toLowerCase() ?? '';
       const id = service.id?.toLowerCase() ?? '';
+      const localizedName = translateServiceName(service.id, service.name, t).toLowerCase();
+      const localizedCategory = translateServiceCategory(service.category, t)?.toLowerCase() ?? '';
 
       return (
         name.includes(query) ||
+        localizedName.includes(query) ||
         description.includes(query) ||
         category.includes(query) ||
+        localizedCategory.includes(query) ||
         id.includes(query)
       );
     })
     .slice(0, 8)
     .map((service) => ({
       id: service.id,
-      title: service.name,
-      subtitle: service.category ?? 'Service',
+      title: translateServiceName(service.id, service.name, t),
+      subtitle: translateServiceCategory(service.category, t) ?? t('common.service'),
       route: {
         pathname: '/service/[id]' as const,
         params: { id: service.id },
       },
     }));
-  }, [searchText, services]);
+  }, [searchText, services, t]);
 
   if (isLoading) {
     return (
       <View style={styles.safeArea}>
-        <ServiceLoadState status="loading" />
+        <View style={styles.stateScreenContent}>
+          {renderHeader()}
+          <ServiceLoadState status="loading" />
+        </View>
       </View>
     );
   }
@@ -180,7 +240,10 @@ export default function HomeScreen() {
   if (error) {
     return (
       <View style={styles.safeArea}>
-        <ServiceLoadState status="error" message={error.message} onRetry={retry} />
+        <View style={styles.stateScreenContent}>
+          {renderHeader()}
+          <ServiceLoadState status="error" message={t('common.checkConnection')} onRetry={retry} />
+        </View>
       </View>
     );
   }
@@ -188,11 +251,14 @@ export default function HomeScreen() {
   if (services.length === 0) {
     return (
       <View style={styles.safeArea}>
-        <ServiceLoadState
-          status="empty"
-          message="There are no services to display right now."
-          onRetry={retry}
-        />
+        <View style={styles.stateScreenContent}>
+          {renderHeader()}
+          <ServiceLoadState
+            status="empty"
+            message={t('services.noneAvailable')}
+            onRetry={retry}
+          />
+        </View>
       </View>
     );
   }
@@ -204,19 +270,7 @@ export default function HomeScreen() {
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.content}
       >
-        <View style={styles.headerRow}>
-          <View style={styles.headerTextWrap}>
-            <AppText style={styles.brandName}>Ganpati</AppText>
-            <View style={styles.locationRow}>
-              <AppText style={styles.locationText}>📍 Ambikapur, Chhattisgarh</AppText>
-              <Ionicons name="chevron-down" size={12} color={colors.textMuted} />
-            </View>
-          </View>
-
-          <Pressable style={styles.notificationButton} accessibilityRole="button" onPress={() => {}}>
-            <Ionicons name="notifications-outline" size={20} color={colors.textMuted} />
-          </Pressable>
-        </View>
+        {renderHeader()}
 
         <View style={[styles.searchBar, isSearchFocused && styles.searchBarFocused]}>
           <Ionicons name="search-outline" size={18} color={colors.textMuted} />
@@ -225,7 +279,7 @@ export default function HomeScreen() {
             onChangeText={setSearchText}
             onSubmitEditing={handleSearchSubmit}
             returnKeyType="search"
-            placeholder="Search for services"
+            placeholder={t('home.searchPlaceholder')}
             placeholderTextColor="#8C939C"
             style={styles.searchInput}
             autoCapitalize="none"
@@ -241,7 +295,7 @@ export default function HomeScreen() {
            <TextInput
               value={searchText}
               onChangeText={setSearchText}
-              placeholder="Search for services"
+              placeholder={t('home.searchPlaceholder')}
               placeholderTextColor="#8C939C"
               style={styles.searchInput}
               autoCapitalize="none"
@@ -281,16 +335,16 @@ export default function HomeScreen() {
               ))
             ) : (
               <View style={styles.noSearchResult}>
-                <AppText style={styles.noSearchResultText}>No services found</AppText>
+                <AppText style={styles.noSearchResultText}>{t('home.noServicesFound')}</AppText>
               </View>
             )}
           </View>
         )}
 
         <View style={styles.sectionHeader}>
-          <AppText style={styles.sectionTitle}>Popular Categories</AppText>
+          <AppText style={styles.sectionTitle}>{t('home.popularCategories')}</AppText>
           <Pressable onPress={() => navigateToServices()}>
-            <AppText style={styles.seeAll}>See All</AppText>
+            <AppText style={styles.seeAll}>{t('home.seeAll')}</AppText>
           </Pressable>
         </View>
 
@@ -321,11 +375,9 @@ export default function HomeScreen() {
         <View style={styles.bannerWrapper}>
           <View style={styles.banner}>
             <View style={styles.bannerContent}>
-              <AppText style={styles.bannerTitle}>
-                Trusted{"\n"}Local Workers{"\n"}for Your Needs
-              </AppText>
+              <AppText style={styles.bannerTitle}>{t('home.bannerTitle')}</AppText>
 
-              <AppText style={styles.bannerSubtitle}>Fast • Reliable • Affordable</AppText>
+              <AppText style={styles.bannerSubtitle}>{t('home.bannerSubtitle')}</AppText>
 
               <Pressable
                 style={styles.bannerAction}
@@ -356,11 +408,9 @@ export default function HomeScreen() {
             style={styles.banner}
           >
             <View style={styles.bannerContent}>
-              <AppText style={styles.bannerTitle}>
-                Trusted{"\n"}Local Workers{"\n"}for Your Needs
-              </AppText>
+              <AppText style={styles.bannerTitle}>{t('home.bannerTitle')}</AppText>
 
-              <AppText style={styles.bannerSubtitle}>Fast • Reliable • Affordable</AppText>
+              <AppText style={styles.bannerSubtitle}>{t('home.bannerSubtitle')}</AppText>
 
               <Pressable
                 style={styles.bannerAction}
@@ -381,7 +431,7 @@ export default function HomeScreen() {
         </View>
 
         <View style={styles.sectionHeaderTopSpacing}>
-          <AppText style={styles.sectionTitle}>All Categories</AppText>
+          <AppText style={styles.sectionTitle}>{t('home.allCategories')}</AppText>
         </View>
 
         <View style={styles.gridContainer}>
@@ -398,7 +448,7 @@ export default function HomeScreen() {
                   <AppText style={styles.categoryEmoji}>{category.emoji}</AppText>
                 )}
               </View>
-              <AppText style={styles.gridLabel} numberOfLines={2}>{category.name}</AppText>
+              <AppText style={styles.gridLabel}>{category.name}</AppText>
             </Pressable>
           ))}
         </View>
@@ -406,14 +456,14 @@ export default function HomeScreen() {
         <Pressable style={styles.otherServicesButton} onPress={() => navigateToServices()}>
           <View style={styles.otherServicesLeft}>
             <Ionicons name="grid-outline" size={18} color={colors.text} />
-            <AppText style={styles.otherServicesText}>Other Services</AppText>
+            <AppText style={styles.otherServicesText}>{t('home.otherServices')}</AppText>
           </View>
           <Ionicons name="chevron-forward" size={18} color={colors.text} />
         </Pressable>
 
         <Pressable
           accessibilityRole="button"
-          accessibilityLabel="List Your Business. Register as a Worker"
+          accessibilityLabel={`${t('home.listBusiness')}. ${t('home.registerWorker')}`}
           style={styles.promoBanner}
           onPress={() => router.push('/worker/register')}
         >
@@ -422,19 +472,19 @@ export default function HomeScreen() {
               <Ionicons name="briefcase-outline" size={22} color={colors.primary} />
             </View>
             <View style={styles.promoTextWrap}>
-              <AppText style={styles.promoTitle}>List Your Business</AppText>
+              <AppText style={styles.promoTitle}>{t('home.listBusiness')}</AppText>
               <AppText style={styles.promoText}>
-                Join our network of trusted local workers.
+                {t('home.listBusinessSubtitle')}
               </AppText>
               <View style={styles.promoButton}>
-                <AppText style={styles.promoButtonText}>Register as a Worker</AppText>
+                <AppText style={styles.promoButtonText}>{t('home.registerWorker')}</AppText>
                 <Ionicons name="arrow-forward" size={16} color={colors.text} />
               </View>
             </View>
           </View>
         </Pressable>
 
-        <Pressable
+        {/* <Pressable
   onPress={() => router.push('/supabase-test')}
   style={{
     backgroundColor: colors.primary,
@@ -445,9 +495,9 @@ export default function HomeScreen() {
   }}
 >
   <AppText style={{ color: colors.text, fontWeight: 'bold' }}>
-    Test Supabase
+  {t('home.testSupabase')}
   </AppText>
-</Pressable>
+</Pressable> */}
 
       </ScrollView>
     </View>
@@ -458,6 +508,11 @@ const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
     backgroundColor: colors.background,
+  },
+  stateScreenContent: {
+    flex: 1,
+    paddingHorizontal: 16,
+    paddingTop: 10,
   },
   content: {
     paddingHorizontal: 16,
@@ -473,7 +528,14 @@ const styles = StyleSheet.create({
   },
   headerTextWrap: {
     flex: 1,
+    minWidth: 0,
     justifyContent: 'center',
+  },
+  headerActions: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    flexShrink: 0,
   },
   brandName: {
     fontSize: 28,
@@ -506,6 +568,22 @@ const styles = StyleSheet.create({
     shadowRadius: 8,
     shadowOffset: { width: 0, height: 2 },
     elevation: 1,
+  },
+  languageButton: {
+    minHeight: 44,
+    paddingHorizontal: 9,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 12,
+    backgroundColor: colors.primaryLight,
+    borderWidth: 1,
+    borderColor: colors.border,
+  },
+  languageButtonText: {
+    color: colors.primaryDark,
+    fontSize: 12,
+    lineHeight: 18,
+    fontWeight: '700',
   },
   searchBar: {
     flexDirection: 'row',
@@ -892,8 +970,9 @@ promoButton: {
   paddingVertical: 10,
 },
 promoButtonText: {
-  color: colors.text,
-  fontSize: 13,
+flexShrink: 1,
+color: colors.text,
+fontSize: 13,
   fontWeight: '700',
 },
 

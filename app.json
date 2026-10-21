@@ -3,8 +3,11 @@
     "name": "Ganpati Suvidha",
     "slug": "MyApp",
     "version": "1.0.0",
+     "updates": {
+      "enabled": false
+    },
     "orientation": "portrait",
-    "icon": "./assets/images/ganpati-icon.png",
+    "icon": "./assets/images/ganpati-icon-padded.png",
     "scheme": "ganpati-suvidha",
     "userInterfaceStyle": "automatic",
     "ios": {
@@ -13,7 +16,7 @@
     "android": {
       "adaptiveIcon": {
         "backgroundColor": "#E8D7C3",
-        "foregroundImage": "./assets/images/ganpati-icon.png"
+        "foregroundImage": "./assets/images/ganpati-icon-padded.png"
       },
       "predictiveBackGestureEnabled": false,
       "package": "com.pandey0801.ganpati"

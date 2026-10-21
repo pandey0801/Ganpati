@@ -1,5 +1,6 @@
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { SafeAreaView, ScrollView, StyleSheet, View } from 'react-native';
 
 import AppButton from '@/components/common/AppButton';
@@ -13,6 +14,7 @@ import { useWorkers } from '@/hooks/useWorkers';
 
 export default function WorkerDetailScreen() {
   const router = useRouter();
+  const { t } = useTranslation();
   const { id } = useLocalSearchParams<{ id: string }>();
   const { workers, isLoading, error, retry } = useWorkers({ workerId: id });
   const worker = workers.find((item) => item.id === id);
@@ -22,7 +24,7 @@ export default function WorkerDetailScreen() {
       <SafeAreaView style={styles.safeArea}>
         <WorkerLoadState
           status={isLoading ? 'loading' : 'error'}
-          message={error ? 'Please check your connection and try again.' : undefined}
+          message={error ? t('common.checkConnection') : undefined}
           onRetry={error ? retry : undefined}
         />
       </SafeAreaView>
@@ -33,7 +35,7 @@ export default function WorkerDetailScreen() {
     return (
       <SafeAreaView style={styles.safeArea}>
         <View style={styles.emptyContainer}>
-          <AppText variant="subtitle">Worker not found</AppText>
+          <AppText variant="subtitle">{t('workerDetail.notFound')}</AppText>
         </View>
       </SafeAreaView>
     );
@@ -52,7 +54,7 @@ export default function WorkerDetailScreen() {
         <ContactButtons phone={worker.phone} />
         <WorkerInfo worker={worker} />
 
-        <AppButton title="Back" variant="outline" onPress={() => router.back()} />
+        <AppButton title={t('common.back')} variant="outline" onPress={() => router.back()} />
       </ScrollView>
     </SafeAreaView>
   );

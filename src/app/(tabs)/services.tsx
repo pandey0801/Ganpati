@@ -1,5 +1,6 @@
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { ScrollView, StyleSheet, TextInput, View } from 'react-native';
 // import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -10,9 +11,11 @@ import ServiceLoadState from '@/components/services/ServiceLoadState';
 import { colors } from '@/constants/colors';
 import { useServices } from '@/hooks/useServices';
 import { filterServices } from '@/utils/search';
+import { translateServiceName } from '@/i18n/serviceNames';
 
 export default function ServicesScreen() {
   const router = useRouter();
+  const { t } = useTranslation();
   const [isInputFocused, setIsInputFocused] = useState(false);
   const { category, query: searchQuery } = useLocalSearchParams<{ category?: string | string[]; query?: string | string[] }>();
   const [query, setQuery] = useState(Array.isArray(searchQuery) ? searchQuery[0] ?? '' : searchQuery ?? '');
@@ -20,20 +23,26 @@ export default function ServicesScreen() {
   const selectedCategory = Array.isArray(category) ? category[0] : category;
 
   const filteredServices = useMemo(
-    () => filterServices(services, query, selectedCategory),
-    [services, query, selectedCategory],
+    () =>
+      filterServices(
+        services,
+        query,
+        selectedCategory,
+        (service) => translateServiceName(service.id, service.name, t),
+      ),
+    [services, query, selectedCategory, t],
   );
 
   return (
     // <SafeAreaView style={styles.safeArea}>
     <View style={styles.safeArea}>
       <ScrollView contentContainerStyle={styles.content}>
-        <AppHeader title="Services" subtitle="Find the support you need" />
+        <AppHeader title={t('services.title')} subtitle={t('services.subtitle')} />
 
         <TextInput
           value={query}
           onChangeText={setQuery}
-          placeholder="Search services"
+          placeholder={t('services.searchPlaceholder')}
           style={[styles.input, isInputFocused && styles.inputFocused]}
           selectionColor={colors.primary}
           placeholderTextColor={colors.textMuted}
@@ -46,20 +55,24 @@ export default function ServicesScreen() {
         {isLoading ? (
           <ServiceLoadState status="loading" />
         ) : error ? (
-          <ServiceLoadState status="error" message={error.message} onRetry={retry} />
+          <ServiceLoadState
+            status="error"
+            message={t('common.checkConnection')}
+            onRetry={retry}
+          />
         ) : services.length === 0 ? (
           <ServiceLoadState
             status="empty"
-            message="There are no services to display right now."
+            message={t('services.noneAvailable')}
             onRetry={retry}
           />
         ) : filteredServices.length === 0 ? (
           <EmptyState
-            title="No services found"
+            title={t('services.notFoundTitle')}
             message={
               selectedCategory || query.trim()
-                ? 'Try another category or search term.'
-                : 'Try another search or browse all categories.'
+                ? t('services.categoryOrSearch')
+                : t('services.searchOrBrowse')
             }
           />
         ) : (

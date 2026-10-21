@@ -9,11 +9,14 @@ import {
 } from 'react-native';
 
 import { colors } from '@/constants/colors';
+import { useTranslation } from 'react-i18next';
+import { translateServiceCategory, translateServiceName } from '@/i18n/serviceNames';
 
 // import { supabase } from '../lib/supabase';
 import supabase from '../lib/supabase';
 
 export default function SupabaseTestScreen() {
+  const { t } = useTranslation();
   const [services, setServices] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -33,7 +36,7 @@ export default function SupabaseTestScreen() {
         setServices(data ?? []);
       } catch (err) {
         console.error('Supabase test failed:', err);
-        setError(err.message || 'Unable to fetch services');
+        setError('query-failed');
       } finally {
         setLoading(false);
       }
@@ -46,7 +49,7 @@ export default function SupabaseTestScreen() {
     return (
       <View style={styles.center}>
         <ActivityIndicator size="large" color={colors.primary} />
-        <Text style={styles.message}>Connecting to Supabase...</Text>
+        <Text style={styles.message}>{t('supabaseTest.connecting')}</Text>
       </View>
     );
   }
@@ -54,37 +57,39 @@ export default function SupabaseTestScreen() {
   if (error) {
     return (
       <View style={styles.center}>
-        <Text style={styles.error}>Connection or query failed</Text>
-        <Text style={styles.message}>{error}</Text>
+        <Text style={styles.error}>{t('supabaseTest.connectionError')}</Text>
+        <Text style={styles.message}>{t('supabaseTest.unableToFetch')}</Text>
       </View>
     );
   }
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Supabase Connection Test</Text>
-      <Text style={styles.success}>✓ Query completed successfully</Text>
+      <Text style={styles.title}>{t('supabaseTest.title')}</Text>
+      <Text style={styles.success}>{t('supabaseTest.success')}</Text>
       <Text style={styles.count}>
-        Services fetched: {services.length}
+        {t('supabaseTest.servicesFetched', { count: services.length })}
       </Text>
 
       <FlatList
         data={services}
         keyExtractor={(item) => item.id}
         ListEmptyComponent={
-          <Text style={styles.message}>No services found. Check your table data.</Text>
+          <Text style={styles.message}>{t('supabaseTest.empty')}</Text>
         }
         renderItem={({ item }) => (
           <View style={styles.card}>
             <Text style={styles.name}>
               {item.icon ? `${item.icon} ` : ''}
-              {item.name}
+              {translateServiceName(item.id, item.name, t)}
             </Text>
             <Text style={styles.category}>
-              Category: {item.category || 'Not specified'}
+              {t('supabaseTest.category', {
+                category: translateServiceCategory(item.category, t) ?? t('supabaseTest.notSpecified'),
+              })}
             </Text>
             <Text style={styles.description}>
-              {item.description || 'No description'}
+              {item.description || t('supabaseTest.noDescription')}
             </Text>
             <Text style={styles.id}>ID: {item.id}</Text>
           </View>

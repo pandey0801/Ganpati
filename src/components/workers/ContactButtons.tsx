@@ -3,12 +3,14 @@ import { Linking } from 'react-native';
 import { StyleSheet, View } from 'react-native';
 
 import AppButton from '@/components/common/AppButton';
+import { useTranslation } from 'react-i18next';
 
 interface ContactButtonsProps {
   phone: string;
 }
 
 export default function ContactButtons({ phone }: ContactButtonsProps) {
+  const { t } = useTranslation();
   const phoneNumber = phone.replace(/[^\d+]/g, '');
   const whatsappNumber = phone.replace(/[^\d]/g, '');
   const openContactLink = (url: string) => {
@@ -22,12 +24,12 @@ export default function ContactButtons({ phone }: ContactButtonsProps) {
   return (
     <View style={styles.container}>
       <AppButton
-        title="Call"
+        title={t('contact.call')}
         style={styles.button}
         onPress={() => openContactLink(`tel:${phoneNumber}`)}
       />
       <AppButton
-        title="Message"
+        title={t('contact.message')}
         style={[styles.button, styles.whatsappButton]}
         onPress={() => openContactLink(`https://wa.me/${whatsappNumber}`)}
       />

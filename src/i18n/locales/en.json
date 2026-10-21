@@ -1,0 +1,231 @@
+{
+  "language": {
+    "hindi": "हिंदी",
+    "english": "English",
+    "switchToHindi": "Switch language to Hindi",
+    "switchToEnglish": "Switch language to English",
+    "saveErrorTitle": "Language preference not saved",
+    "saveErrorMessage": "The language changed, but your preference could not be saved. Please try again."
+  },
+  "navigation": {
+    "home": "Home",
+    "services": "Services",
+    "search": "Search",
+    "explore": "Explore",
+    "brand": "Ganpati"
+  },
+  "common": {
+    "back": "Back",
+    "backToHome": "Back to Home",
+    "goBack": "Go back",
+    "tryAgain": "Try again",
+    "loading": "Loading…",
+    "checkConnection": "Please check your connection and try again.",
+    "service": "Service",
+    "tryEditing": "Try editing"
+  },
+  "home": {
+    "location": "Ambikapur, Chhattisgarh",
+    "notification": "Notifications",
+    "searchPlaceholder": "Search for services",
+    "noServicesFound": "No services found",
+    "popularCategories": "Popular Categories",
+    "seeAll": "See All",
+    "bannerTitle": "Trusted\nLocal Workers\nfor Your Needs",
+    "bannerSubtitle": "Fast • Reliable • Affordable",
+    "allCategories": "All Categories",
+    "more": "More",
+    "otherServices": "Other Services",
+    "listBusiness": "List Your Business",
+    "listBusinessSubtitle": "Join our network of trusted local workers.",
+    "registerWorker": "Register as a Worker",
+    "testSupabase": "Test Supabase"
+  },
+  "services": {
+    "title": "Services",
+    "subtitle": "Find the support you need",
+    "searchPlaceholder": "Search services",
+    "noneAvailable": "There are no services to display right now.",
+    "notFoundTitle": "No services found",
+    "categoryOrSearch": "Try another category or search term.",
+    "searchOrBrowse": "Try another search or browse all categories."
+  },
+  "search": {
+    "title": "Search",
+    "subtitle": "Find workers near you",
+    "placeholder": "Search by name, location, or keyword",
+    "noWorkersTitle": "No workers found",
+    "noWorkersMessage": "Try a different keyword or location."
+  },
+  "serviceDetail": {
+    "notFoundTitle": "Service not found",
+    "notFoundMessage": "This service could not be located.",
+    "defaultCategory": "Cooling Solutions at Your Doorstep",
+    "verifiedWorkers": "Verified Workers",
+    "trustedLocal": "Trusted & Local",
+    "affordablePricing": "Affordable Pricing",
+    "workersFound": "{{count}} Workers Found",
+    "sort": "Sort",
+    "experience": "5+ years experience",
+    "call": "Call",
+    "whatsapp": "WhatsApp",
+    "noWorkers": "No workers available",
+    "checkBack": "Please check back later."
+  },
+  "workerDetail": {
+    "notFound": "Worker not found"
+  },
+  "workerInfo": {
+    "about": "About",
+    "location": "Location",
+    "phone": "Phone",
+    "availability": "Availability"
+  },
+  "availability": {
+    "available": "Available",
+    "busy": "Busy",
+    "unavailable": "Unavailable",
+    "notAvailable": "Not available"
+  },
+  "contact": {
+    "call": "Call",
+    "message": "Message"
+  },
+  "workerLoad": {
+    "loading": "Loading workers…",
+    "error": "Unable to load workers",
+    "empty": "No workers available"
+  },
+  "serviceLoad": {
+    "loading": "Loading services…",
+    "error": "Unable to load services",
+    "empty": "No services available"
+  },
+  "registration": {
+    "title": "Register as a Worker",
+    "subtitle": "Share your details to join our trusted local network.",
+    "successTitle": "Registration submitted",
+    "successMessage": "Your registration has been submitted successfully. Our team will review your details before your profile becomes visible in the app.",
+    "detailsTitle": "Your details",
+    "fullName": "Full name *",
+    "fullNamePlaceholder": "Enter your full name",
+    "mobile": "Mobile number *",
+    "mobilePlaceholder": "10-digit Indian mobile number",
+    "alternateMobile": "Alternate mobile number (optional)",
+    "alternateMobilePlaceholder": "Alternate mobile number",
+    "category": "Service category *",
+    "location": "City / locality or service location *",
+    "locationPlaceholder": "e.g. Ambikapur, Chhattisgarh",
+    "description": "Short description of work offered *",
+    "descriptionPlaceholder": "Describe the services you provide and your skills",
+    "experience": "Years of experience (optional)",
+    "experiencePlaceholder": "e.g. 5",
+    "photo": "Profile photo *",
+    "chooseGallery": "Choose from Gallery",
+    "takePhoto": "Take Photo",
+    "compressing": "Compressing photo…",
+    "photoFormats": "JPEG, PNG, WebP, or HEIC. Photos are compressed before private upload.",
+    "submitting": "Uploading photo and submitting…",
+    "submit": "Submit Registration",
+    "privacy": "Your profile photo and details stay private until your registration is reviewed.",
+    "loadingCategories": "Loading service categories…",
+    "categoriesUnavailable": "Could not load service categories. Check your connection.",
+    "noCategories": "No service categories are available yet.",
+    "cameraPermission": "Camera access is needed to take a profile photo.",
+    "galleryPermission": "Photo library access is needed to choose a profile photo.",
+    "cameraCancelled": "Camera was cancelled. You can choose or take a photo when ready.",
+    "galleryCancelled": "Photo selection was cancelled. You can choose or take a photo when ready.",
+    "pickerFailed": "The photo picker could not be opened. Check permissions and try again.",
+    "photoVideo": "Choose an image file, not a video.",
+    "photoFormatError": "Choose a JPEG, PNG, WebP, or HEIC photo.",
+    "photoSourceSizeError": "Choose a photo smaller than 15 MB.",
+    "photoDimensionsError": "This photo has invalid dimensions. Choose another image.",
+    "photoReadError": "Could not read the processed photo.",
+    "photoUploadSizeError": "The compressed photo must be smaller than 4 MB. Choose another photo.",
+    "photoProcessError": "Could not process this photo. Please choose another one.",
+    "submitError": "Unable to submit your registration. Please try again.",
+    "rateLimited": "Too many registration attempts. Please try again later.",
+    "serverError": "The registration service is temporarily unavailable. Please try again later.",
+    "validation": {
+      "fullName": "Enter your full name (2–100 characters).",
+      "mobile": "Enter a valid 10-digit Indian mobile number.",
+      "category": "Choose a service category.",
+      "location": "Enter your city, locality, or service location.",
+      "description": "Describe your work in 10–500 characters.",
+      "experience": "Enter a whole number from 0 to 60.",
+      "photo": "Add a profile photo to continue."
+    }
+  },
+  "onboarding": {
+    "getStarted": "Let’s get started",
+    "browse": "Browse home services, compare specialists, and connect with the right help quickly.",
+    "continue": "Continue",
+    "welcome": "Welcome aboard",
+    "explore": "Explore top-rated local professionals and book the right support without leaving the app.",
+    "openHome": "Open Home"
+  },
+  "splash": {
+    "tagline": "Skilled workers, stronger community",
+    "loading": "Loading…",
+    "location": "Ambikapur"
+  },
+  "explore": {
+    "title": "Explore",
+    "description": "This starter app includes example\ncode to help you get started.",
+    "documentation": "Expo documentation",
+    "fileRouting": "File-based routing",
+    "fileRoutingText": "This app has two screens: {{index}} and {{explore}}",
+    "layoutText": "The layout file in {{layout}} sets up the tab navigator.",
+    "platformSupport": "Android, iOS, and web support",
+    "platformText": "You can open this project on Android, iOS, and the web. To open the web version, press",
+    "terminalText": "in the terminal running this project.",
+    "images": "Images",
+    "staticImagesText": "For static images, use suffixes such as",
+    "suffixText": "to support different screen densities.",
+    "lightDark": "Light and dark mode components",
+    "themeText": "This template has light and dark mode support. The",
+    "themeHookText": "hook lets you inspect what the user's current color scheme is, so you can adjust colors accordingly.",
+    "animations": "Animations",
+    "animationText": "This template includes an example of an animated component. The",
+    "animationLibraryText": "component uses the powerful",
+    "animationEndText": "library to animate opening this hint.",
+    "learnMore": "Learn more"
+  },
+  "supabaseTest": {
+    "connecting": "Connecting to Supabase…",
+    "connectionError": "Connection or query failed",
+    "title": "Supabase Connection Test",
+    "success": "✓ Query completed successfully",
+    "servicesFetched": "Services fetched: {{count}}",
+    "empty": "No services found. Check your table data.",
+    "category": "Category: {{category}}",
+    "notSpecified": "Not specified",
+    "noDescription": "No description",
+    "unableToFetch": "Unable to fetch services"
+  },
+  "serviceNames": {
+    "acRepair": "AC Repair",
+    "electrician": "Electrician",
+    "plumber": "Plumber",
+    "painter": "Painter",
+    "cctv": "CCTV",
+    "carpenter": "Carpenter",
+    "driver": "Driver",
+    "cleaning": "Cleaning",
+    "homeAppliance": "Home Appliances",
+    "gardening": "Gardening",
+    "beautySalon": "Beauty & Salon",
+    "constructionWorker": "Construction Worker"
+  },
+  "serviceCategories": {
+    "homeMaintenance": "Home Maintenance",
+    "housekeeping": "Housekeeping",
+    "outdoorCare": "Outdoor Care",
+    "homeImprovement": "Home Improvement",
+    "securityServices": "Security Services",
+    "transportation": "Transportation",
+    "homeAppliances": "Home Appliances",
+    "personalCare": "Personal Care",
+    "construction": "Construction"
+  }
+}

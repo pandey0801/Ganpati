@@ -22,7 +22,12 @@ const categoryAliases: Record<string, string[]> = {
   driver: ['driver', 'transport'],
 };
 
-export function filterServices(services: Service[], query: string, category?: string) {
+export function filterServices(
+  services: Service[],
+  query: string,
+  category?: string,
+  getTranslatedName?: (service: Service) => string,
+) {
   let filteredServices = services;
 
   if (category) {
@@ -46,6 +51,7 @@ export function filterServices(services: Service[], query: string, category?: st
   const normalized = query.toLowerCase();
   return filteredServices.filter((service) =>
     service.name.toLowerCase().includes(normalized) ||
+    (getTranslatedName?.(service) ?? '').toLowerCase().includes(normalized) ||
     (service.description || '').toLowerCase().includes(normalized) ||
     (service.category || '').toLowerCase().includes(normalized),
   );
@@ -55,6 +61,7 @@ export function filterWorkers(
   workers: Worker[],
   query: string,
   filters: { serviceId?: string; category?: string; availability?: string } = {},
+  getTranslatedServiceName?: (worker: Worker) => string,
 ) {
   let filteredWorkers = workers;
 
@@ -98,6 +105,7 @@ export function filterWorkers(
     worker.location.toLowerCase().includes(normalized) ||
     worker.description.toLowerCase().includes(normalized) ||
     worker.serviceId.toLowerCase().includes(normalized) ||
+    (getTranslatedServiceName?.(worker) ?? '').toLowerCase().includes(normalized) ||
     (worker.service?.name ?? '').toLowerCase().includes(normalized) ||
     (worker.service?.category ?? '').toLowerCase().includes(normalized),
   );

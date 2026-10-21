@@ -1,6 +1,7 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   Image,
   Linking,
@@ -19,15 +20,17 @@ import WorkerImage from '@/components/workers/WorkerImage';
 import { colors } from '@/constants/colors';
 import { useServices } from '@/hooks/useServices';
 import { useWorkers } from '@/hooks/useWorkers';
+import { translateAvailability, translateServiceCategory, translateServiceName } from '@/i18n/serviceNames';
 
 const featureItems = [
-  { icon: 'shield-checkmark-outline', label: 'Verified Workers' },
-  { icon: 'location-outline', label: 'Trusted & Local' },
-  { icon: 'cash-outline', label: 'Affordable Pricing' },
+  { icon: 'shield-checkmark-outline', label: 'serviceDetail.verifiedWorkers' },
+  { icon: 'location-outline', label: 'serviceDetail.trustedLocal' },
+  { icon: 'cash-outline', label: 'serviceDetail.affordablePricing' },
 ];
 
 export default function ServiceDetailScreen() {
   const router = useRouter();
+  const { t } = useTranslation();
   const { id } = useLocalSearchParams<{ id: string }>();
   const { services, isLoading, error, retry } = useServices();
   const {
@@ -69,7 +72,7 @@ export default function ServiceDetailScreen() {
           {renderNavigationBar()}
           <ServiceLoadState
             status={isLoading ? 'loading' : 'error'}
-            message={error?.message}
+            message={error ? t('common.checkConnection') : undefined}
             onRetry={error ? retry : undefined}
           />
         </View>
@@ -80,7 +83,10 @@ export default function ServiceDetailScreen() {
   if (!service) {
     return (
       <SafeAreaView style={styles.safeArea}>
-        <EmptyState title="Service not found" message="This service could not be located." />
+        <EmptyState
+          title={t('serviceDetail.notFoundTitle')}
+          message={t('serviceDetail.notFoundMessage')}
+        />
       </SafeAreaView>
     );
   }
@@ -96,10 +102,10 @@ export default function ServiceDetailScreen() {
         <View style={styles.bannerCard}>
           <View style={styles.bannerTextWrap}>
             <AppText variant="title" style={styles.bannerTitle}>
-              {service.name}
+              {translateServiceName(service.id, service.name, t)}
             </AppText>
             <AppText style={styles.bannerSubtitle}>
-              {service.category || 'Cooling Solutions at Your Doorstep'}
+              {translateServiceCategory(service.category, t) || t('serviceDetail.defaultCategory')}
             </AppText>
           </View>
 
@@ -112,19 +118,19 @@ export default function ServiceDetailScreen() {
           {featureItems.map((item) => (
             <View key={item.label} style={styles.featurePill}>
               <Ionicons name={item.icon as keyof typeof Ionicons.glyphMap} size={14} color={colors.success} />
-              <AppText style={styles.featureText}>{item.label}</AppText>
+              <AppText style={styles.featureText}>{t(item.label)}</AppText>
             </View>
           ))}
         </View>
 
         <View style={styles.sectionHeader}>
           <AppText variant="subtitle" style={styles.sectionTitle}>
-            {serviceWorkers.length} Workers Found
+            {t('serviceDetail.workersFound', { count: serviceWorkers.length })}
           </AppText>
 
           <Pressable style={styles.filterButton} accessibilityRole="button">
             <Ionicons name="filter-outline" size={15} color={colors.text} />
-            <AppText style={styles.filterText}>Sort</AppText>
+            <AppText style={styles.filterText}>{t('serviceDetail.sort')}</AppText>
           </Pressable>
         </View>
 
@@ -133,11 +139,14 @@ export default function ServiceDetailScreen() {
         ) : workersError ? (
           <WorkerLoadState
             status="error"
-            message="Please check your connection and try again."
+            message={t('common.checkConnection')}
             onRetry={retryWorkers}
           />
         ) : serviceWorkers.length === 0 ? (
-          <EmptyState title="No workers available" message="Please check back later." />
+          <EmptyState
+            title={t('serviceDetail.noWorkers')}
+            message={t('serviceDetail.checkBack')}
+          />
         ) : (
           serviceWorkers.map((worker) => (
             <Pressable
@@ -173,7 +182,7 @@ export default function ServiceDetailScreen() {
 
               <View style={styles.infoRow}>
                 <Ionicons name="briefcase-outline" size={14} color={colors.textMuted} />
-                <AppText style={styles.infoText}>5+ years experience</AppText>
+                <AppText style={styles.infoText}>{t('serviceDetail.experience')}</AppText>
               </View>
 
               <View style={styles.infoRow}>
@@ -183,7 +192,9 @@ export default function ServiceDetailScreen() {
 
               <View style={styles.statusRow}>
                 <View style={styles.statusBadge}>
-                  <AppText style={styles.statusText}>{worker.availability}</AppText>
+                  <AppText style={styles.statusText}>
+                    {translateAvailability(worker.availability, t)}
+                  </AppText>
                 </View>
               </View>
 
@@ -193,7 +204,7 @@ export default function ServiceDetailScreen() {
                   onPress={() => Linking.openURL(`tel:${worker.phone}`)}
                 >
                   <Ionicons name="call-outline" size={16} color={colors.text} />
-                  <AppText style={styles.callButtonText}>Call</AppText>
+                  <AppText style={styles.callButtonText}>{t('serviceDetail.call')}</AppText>
                 </Pressable>
 
                 <Pressable
@@ -203,7 +214,7 @@ export default function ServiceDetailScreen() {
                   }
                 >
                   <Ionicons name="logo-whatsapp" size={16} color={colors.surface} />
-                  <AppText style={styles.whatsappText}>WhatsApp</AppText>
+                  <AppText style={styles.whatsappText}>{t('serviceDetail.whatsapp')}</AppText>
                 </Pressable>
               </View>
             </Pressable>
@@ -321,9 +332,11 @@ const styles = StyleSheet.create({
     gap: 6,
   },
   featureText: {
+    flexShrink: 1,
     color: colors.text,
     fontSize: 11,
     fontWeight: '600',
+    textAlign: 'center',
   },
   sectionHeader: {
     flexDirection: 'row',

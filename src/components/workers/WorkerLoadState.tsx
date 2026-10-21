@@ -3,6 +3,7 @@ import { ActivityIndicator, Pressable, StyleSheet, View } from 'react-native';
 
 import AppText from '@/components/common/AppText';
 import { colors } from '@/constants/colors';
+import { useTranslation } from 'react-i18next';
 
 interface WorkerLoadStateProps {
   status: 'loading' | 'error' | 'empty';
@@ -15,11 +16,13 @@ export default function WorkerLoadState({
   message,
   onRetry,
 }: WorkerLoadStateProps) {
+  const { t } = useTranslation();
+
   if (status === 'loading') {
     return (
       <View style={styles.container} accessibilityRole="progressbar">
         <ActivityIndicator size="large" color={colors.primary} />
-        <AppText style={styles.message}>Loading workers...</AppText>
+        <AppText style={styles.message}>{t('workerLoad.loading')}</AppText>
       </View>
     );
   }
@@ -27,7 +30,7 @@ export default function WorkerLoadState({
   return (
     <View style={styles.container}>
       <AppText variant="subtitle">
-        {status === 'error' ? 'Unable to load workers' : 'No workers available'}
+        {status === 'error' ? t('workerLoad.error') : t('workerLoad.empty')}
       </AppText>
       {message ? <AppText style={styles.message}>{message}</AppText> : null}
       {onRetry ? (
@@ -36,7 +39,7 @@ export default function WorkerLoadState({
           onPress={onRetry}
           style={styles.retryButton}
         >
-          <AppText style={styles.retryText}>Try again</AppText>
+          <AppText style={styles.retryText}>{t('common.tryAgain')}</AppText>
         </Pressable>
       ) : null}
     </View>

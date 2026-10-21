@@ -154,18 +154,21 @@ async function handleRequest(request: Request): Promise<Response> {
 
   const ipHash = await sha256(`${serviceRoleKey}:ip:${clientIp}`);
   const phoneHash = await sha256(`${serviceRoleKey}:phone:${phone}`);
-  // const { data: allowed, error: rateLimitError } = await supabase.rpc(
-  //   'consume_worker_request_rate_limit',
-  //   { p_ip_hash: ipHash, p_phone_hash: phoneHash },
-  // );
+  const { data: allowed, error: rateLimitError } = await supabase.rpc(
+    'consume_worker_request_rate_limit',
+    { p_ip_hash: ipHash, p_phone_hash: phoneHash },
+  );
 
-  // if (rateLimitError) {
-  //   console.error('Unable to apply worker registration rate limits:', rateLimitError.message);
-  //   return jsonResponse({ ok: false, error: 'Registration is temporarily unavailable.' }, 503);
-  // }
-  // if (!allowed) {
-  //   return jsonResponse({ ok: false, error: 'Too many registration attempts. Please try again later.' }, 429);
-  // }
+  if (rateLimitError) {
+    console.error('Unable to apply worker registration rate limits:', rateLimitError.message);
+    return jsonResponse({ ok: false, error: 'Registration is temporarily unavailable.' }, 503);
+  }
+  if (!allowed) {
+    return jsonResponse(
+      { ok: false, error: 'Too many registration attempts. Please try again later.' },
+      429,
+    );
+  }
 
   const imagePath = `${new Date().toISOString().slice(0, 7)}/${crypto.randomUUID()}.jpg`;
   const { error: uploadError } = await supabase.storage

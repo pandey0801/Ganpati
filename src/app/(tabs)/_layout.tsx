@@ -58,9 +58,11 @@ import { Ionicons } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { colors } from '@/constants/colors';
+import { useTranslation } from 'react-i18next';
 
 export default function TabsLayout() {
   const insets = useSafeAreaInsets();
+  const { t } = useTranslation();
 
   const baseTabHeight = Platform.OS === 'ios' ? 88 : 64;
 
@@ -90,6 +92,8 @@ export default function TabsLayout() {
         tabBarLabelStyle: {
           fontSize: 12,
           fontWeight: '500',
+          flexShrink: 1,
+          textAlign: 'center',
         },
 
         // Icon positioning
@@ -103,7 +107,7 @@ export default function TabsLayout() {
       <Tabs.Screen
         name="home"
         options={{
-          title: 'Home',
+          title: t('navigation.home'),
 
           tabBarIcon: ({ color, size, focused }) => (
             <Ionicons
@@ -119,7 +123,7 @@ export default function TabsLayout() {
       <Tabs.Screen
         name="services"
         options={{
-          title: 'Services',
+          title: t('navigation.services'),
 
           tabBarIcon: ({ color, size, focused }) => (
             <Ionicons
@@ -135,7 +139,7 @@ export default function TabsLayout() {
       <Tabs.Screen
         name="search"
         options={{
-          title: 'Search',
+          title: t('navigation.search'),
 
           tabBarIcon: ({ color, size, focused }) => (
             <Ionicons

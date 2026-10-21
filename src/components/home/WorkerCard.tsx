@@ -5,6 +5,8 @@ import AppText from '@/components/common/AppText';
 import { colors } from '@/constants/colors';
 import WorkerImage from '@/components/workers/WorkerImage';
 import { Worker } from '@/types/worker';
+import { translateAvailability } from '@/i18n/serviceNames';
+import { useTranslation } from 'react-i18next';
 
 interface WorkerCardProps {
   worker: Worker;
@@ -12,6 +14,8 @@ interface WorkerCardProps {
 }
 
 export default function WorkerCard({ worker, onPress }: WorkerCardProps) {
+  const { t } = useTranslation();
+
   return (
     <Pressable onPress={onPress} style={styles.card}>
       <WorkerImage uri={worker.image} style={styles.image} />
@@ -19,7 +23,7 @@ export default function WorkerCard({ worker, onPress }: WorkerCardProps) {
         <AppText variant="subtitle">{worker.name}</AppText>
         <AppText variant="caption" style={styles.meta}>{worker.location}</AppText>
         <AppText variant="small" style={styles.availability}>
-          {worker.availability}
+          {translateAvailability(worker.availability, t)}
         </AppText>
       </View>
     </Pressable>

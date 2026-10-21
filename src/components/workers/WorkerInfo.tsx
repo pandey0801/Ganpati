@@ -4,27 +4,31 @@ import { StyleSheet, View } from 'react-native';
 import AppText from '@/components/common/AppText';
 import { colors } from '@/constants/colors';
 import { Worker } from '@/types/worker';
+import { useTranslation } from 'react-i18next';
+import { translateAvailability } from '@/i18n/serviceNames';
 
 interface WorkerInfoProps {
   worker: Worker;
 }
 
 export default function WorkerInfo({ worker }: WorkerInfoProps) {
+  const { t } = useTranslation();
+
   return (
     <View style={styles.container}>
-      <AppText variant="subtitle">About</AppText>
+      <AppText variant="subtitle">{t('workerInfo.about')}</AppText>
       <AppText variant="body" style={styles.description}>{worker.description}</AppText>
       <View style={styles.metaRow}>
-        <AppText variant="caption" style={styles.label}>Location</AppText>
+        <AppText variant="caption" style={styles.label}>{t('workerInfo.location')}</AppText>
         <AppText variant="body">{worker.location}</AppText>
       </View>
       <View style={styles.metaRow}>
-        <AppText variant="caption" style={styles.label}>Phone</AppText>
+        <AppText variant="caption" style={styles.label}>{t('workerInfo.phone')}</AppText>
         <AppText variant="body">{worker.phone}</AppText>
       </View>
       <View style={styles.metaRow}>
-        <AppText variant="caption" style={styles.label}>Availability</AppText>
-        <AppText variant="body">{worker.availability}</AppText>
+        <AppText variant="caption" style={styles.label}>{t('workerInfo.availability')}</AppText>
+        <AppText variant="body">{translateAvailability(worker.availability, t)}</AppText>
       </View>
     </View>
   );

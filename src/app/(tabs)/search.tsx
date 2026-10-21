@@ -1,5 +1,6 @@
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { ScrollView, StyleSheet, TextInput, View } from 'react-native';
 // import { SafeAreaView, ScrollView, StyleSheet, TextInput, View } from 'react-native';
 
@@ -13,10 +14,12 @@ import WorkerLoadState from '@/components/workers/WorkerLoadState';
 import WorkerCard from '@/components/workers/WorkerCard';
 import { colors } from '@/constants/colors';
 import { useWorkers } from '@/hooks/useWorkers';
+import { translateServiceName } from '@/i18n/serviceNames';
 import { filterWorkers } from '@/utils/search';
 
 export default function SearchScreen() {
   const router = useRouter();
+  const { t } = useTranslation();
   const [isInputFocused, setIsInputFocused] = useState(false);
   const { serviceId, category, availability } = useLocalSearchParams<{
     serviceId?: string | string[];
@@ -35,20 +38,24 @@ export default function SearchScreen() {
         serviceId: selectedServiceId,
         category: selectedCategory,
         availability: selectedAvailability,
-      }),
-    [workers, query, selectedServiceId, selectedCategory, selectedAvailability],
+      },
+      (worker) =>
+        worker.service
+          ? translateServiceName(worker.service.id, worker.service.name, t)
+          : ''),
+    [workers, query, selectedServiceId, selectedCategory, selectedAvailability, t],
   );
 
   return (
     // <SafeAreaView style={styles.safeArea}>
      <View style={styles.safeArea}>
       <ScrollView contentContainerStyle={styles.content}>
-        <AppHeader title="Search" subtitle="Find workers near you" />
+        <AppHeader title={t('search.title')} subtitle={t('search.subtitle')} />
 
         <TextInput
           value={query}
           onChangeText={setQuery}
-          placeholder="Search by name, location, or keyword"
+          placeholder={t('search.placeholder')}
           style={[styles.input, isInputFocused && styles.inputFocused]}
           selectionColor={colors.primary}
           placeholderTextColor={colors.textMuted}
@@ -61,17 +68,17 @@ export default function SearchScreen() {
         ) : error ? (
           <WorkerLoadState
             status="error"
-            message="Please check your connection and try again."
+            message={t('common.checkConnection')}
             onRetry={retry}
           />
         ) : workers.length === 0 ? (
           <WorkerLoadState
             status="empty"
-            message="There are no workers to display right now."
+            message={t('workerLoad.empty')}
             onRetry={retry}
           />
         ) : filteredWorkers.length === 0 ? (
-          <EmptyState title="No workers found" message="Try a different keyword or location." />
+          <EmptyState title={t('search.noWorkersTitle')} message={t('search.noWorkersMessage')} />
         ) : (
           <View>
             {/* {filteredWorkers.map((worker) => (

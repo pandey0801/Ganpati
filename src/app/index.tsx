@@ -244,11 +244,14 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
+import { useTranslation } from 'react-i18next';
 import { colors } from '@/constants/colors';
 
 const { width, height } = Dimensions.get('window');
 
 export default function EntryScreen() {
+  const { t } = useTranslation();
+
   useEffect(() => {
     const timer = setTimeout(() => {
       // router.replace('/onboarding');
@@ -282,9 +285,7 @@ export default function EntryScreen() {
           </View>
 
           {/* Subtitle / Tagline in Hindi */}
-          <Text style={styles.tagline}>
-            कुशल श्रमिक संपर्क
-          </Text>
+          <Text style={styles.tagline}>{t('splash.tagline')}</Text>
 
           {/* Location Indicator */}
           <View style={styles.locationContainer}>
@@ -295,7 +296,7 @@ export default function EntryScreen() {
               style={styles.locationIcon}
             />
             <Text style={styles.locationText}>
-              Ambikapur
+              {t('splash.location')}
             </Text>
           </View>
 
@@ -304,7 +305,7 @@ export default function EntryScreen() {
         {/* Bottom Section (Loading Indicator) */}
         <View style={styles.bottomSection}>
           <View style={styles.dividerLine} />
-          <Text style={styles.loadingText}>लोड हो रहा है...</Text>
+          <Text style={styles.loadingText}>{t('splash.loading')}</Text>
         </View>
 
       </View>

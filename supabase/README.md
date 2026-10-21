@@ -41,6 +41,9 @@ required columns it cannot populate, or a trigger that inserts into
    Edge Function runtime's `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY`
    secrets; never add the service-role key to the app or an `EXPO_PUBLIC_`
    variable. The app calls the function with the existing publishable key.
+   The rate-limit function uses a local `v_now` timestamp; the follow-up
+   migration `20261016000000_worker_request_rate_limit_clock.sql` updates
+   projects where the earlier migration was already applied.
 4. Confirm that the function is deployed, its rate-limit RPC succeeds, and a
    request/photo cannot be read by an anonymous client before releasing the
    app. If the migration fails, the registration endpoint must not be exposed.
@@ -49,6 +52,10 @@ The database limiter permits at most 5 submissions per IP per hour and 3 per
 phone number per day, with a 1,000-request global hourly cap. These limits are
 server-side and are not a replacement for monitoring or stronger anti-abuse
 controls if traffic warrants them.
+
+Development builds log submission stages, HTTP status, and the Edge Function's
+structured error response when a submission fails. Personal form fields, local
+photo URIs, photo contents, and authorization credentials are not logged.
 
 ## End-to-end test
 

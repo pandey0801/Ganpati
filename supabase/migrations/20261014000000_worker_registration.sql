@@ -222,7 +222,7 @@ SECURITY DEFINER
 SET search_path = ''
 AS $$
 DECLARE
-  current_time timestamptz := clock_timestamp();
+  v_now timestamptz := clock_timestamp();
   rate_key text;
   max_attempts integer;
   window_seconds integer;
@@ -245,17 +245,17 @@ BEGIN
       window_started_at,
       attempts
     )
-    VALUES (rate_key, current_time, 1)
+    VALUES (rate_key, v_now, 1)
     ON CONFLICT (subject_key) DO UPDATE
       SET window_started_at = CASE
         WHEN public.worker_request_rate_limits.window_started_at
-          <= current_time - make_interval(secs => window_seconds)
-        THEN current_time
+          <= v_now - make_interval(secs => window_seconds)
+        THEN v_now
         ELSE public.worker_request_rate_limits.window_started_at
       END,
       attempts = CASE
         WHEN public.worker_request_rate_limits.window_started_at
-          <= current_time - make_interval(secs => window_seconds)
+          <= v_now - make_interval(secs => window_seconds)
         THEN 1
         ELSE public.worker_request_rate_limits.attempts + 1
       END
@@ -268,7 +268,7 @@ BEGIN
 
   IF random() < 0.02 THEN
     DELETE FROM public.worker_request_rate_limits
-    WHERE window_started_at < current_time - interval '2 days';
+    WHERE window_started_at < v_now - interval '2 days';
   END IF;
 
   RETURN true;
@@ -306,5 +306,5 @@ SET public = false,
 --   AS RESTRICTIVE
 --   FOR ALL
 --   TO anon, authenticated
---   USING (bucket_id <> 'worker-request-images')
+--   USING (bucket_id <> 'w"orker-request-images')
 --   WITH CHECK (bucket_id <> 'worker-request-images');

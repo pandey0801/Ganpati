@@ -1,5 +1,6 @@
 import { Link } from 'expo-router';
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { SafeAreaView, StyleSheet, View } from 'react-native';
 
 import AppButton from '@/components/common/AppButton';
@@ -7,16 +8,18 @@ import AppText from '@/components/common/AppText';
 import { colors } from '@/constants/colors';
 
 export default function OnboardingScreen() {
+  const { t } = useTranslation();
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
-        <AppText variant="title">Let’s get started</AppText>
+        <AppText variant="title">{t('onboarding.getStarted')}</AppText>
         <AppText variant="body" style={styles.subtitle}>
-          Browse home services, compare specialists, and connect with the right help quickly.
+          {t('onboarding.browse')}
         </AppText>
 
         <Link href="/onboarding/welcome" asChild>
-          <AppButton title="Continue" style={styles.button} />
+          <AppButton title={t('onboarding.continue')} style={styles.button} />
         </Link>
       </View>
     </SafeAreaView>

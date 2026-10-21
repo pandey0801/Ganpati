@@ -3,7 +3,9 @@ import { Pressable, StyleSheet, View } from 'react-native';
 
 import AppText from '@/components/common/AppText';
 import { colors } from '@/constants/colors';
+import { translateServiceName } from '@/i18n/serviceNames';
 import { Service } from '@/types/service';
+import { useTranslation } from 'react-i18next';
 
 interface ServiceListItemProps {
   service: Service;
@@ -11,13 +13,15 @@ interface ServiceListItemProps {
 }
 
 export default function ServiceListItem({ service, onPress }: ServiceListItemProps) {
+  const { t } = useTranslation();
+
   return (
     <Pressable onPress={onPress} style={styles.item}>
       <View style={styles.iconWrap}>
         <AppText variant="title" style={styles.icon}>{service.icon}</AppText>
       </View>
       <View style={styles.content}>
-        <AppText variant="subtitle">{service.name}</AppText>
+        <AppText variant="subtitle">{translateServiceName(service.id, service.name, t)}</AppText>
         <AppText variant="small" style={styles.description}>
           {service.description}
         </AppText>
