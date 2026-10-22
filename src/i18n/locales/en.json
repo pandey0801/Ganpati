@@ -39,6 +39,12 @@
     "listBusiness": "List Your Business",
     "listBusinessSubtitle": "Join our network of trusted local workers.",
     "registerWorker": "Register as a Worker",
+    "whatsappTitle": "List Your Service on WhatsApp",
+    "whatsappSubtitle": "Prefer WhatsApp? Send us your details and our team will help you get listed.",
+    "whatsappContinue": "Continue with WhatsApp",
+    "whatsappUnavailableTitle": "WhatsApp is unavailable",
+    "whatsappNumberNotConfigured": "The business WhatsApp number has not been configured yet.",
+    "whatsappOpenError": "Could not open WhatsApp. Please try again or open WhatsApp Web manually.",
     "testSupabase": "Test Supabase"
   },
   "services": {

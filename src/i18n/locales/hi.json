@@ -39,6 +39,12 @@
     "listBusiness": "अपना काम सूचीबद्ध करें",
     "listBusinessSubtitle": "भरोसेमंद स्थानीय कामगारों के हमारे नेटवर्क से जुड़ें।",
     "registerWorker": "कामगार के रूप में पंजीकरण करें",
+    "whatsappTitle": "WhatsApp पर अपनी सेवा सूचीबद्ध करें",
+    "whatsappSubtitle": "WhatsApp पसंद है? अपनी जानकारी भेजें और हमारी टीम आपको सूचीबद्ध करने में मदद करेगी।",
+    "whatsappContinue": "WhatsApp से आगे बढ़ें",
+    "whatsappUnavailableTitle": "WhatsApp उपलब्ध नहीं है",
+    "whatsappNumberNotConfigured": "व्यवसाय का WhatsApp नंबर अभी कॉन्फ़िगर नहीं किया गया है।",
+    "whatsappOpenError": "WhatsApp नहीं खुल सका। फिर से कोशिश करें या WhatsApp Web खोलें।",
     "testSupabase": "Supabase जाँचें"
   },
   "services": {

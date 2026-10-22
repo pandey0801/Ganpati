@@ -6,6 +6,7 @@ import {
   Alert,
   Dimensions,
   Image,
+  Linking,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -18,6 +19,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 
 import AppText from '@/components/common/AppText';
 import ServiceLoadState from '@/components/services/ServiceLoadState';
+import { BUSINESS_WHATSAPP_NUMBER } from '@/constants/businessContact';
 import { colors } from '@/constants/colors';
 import { useServices } from '@/hooks/useServices';
 import { setAppLanguage } from '@/i18n';
@@ -153,6 +155,55 @@ export default function HomeScreen() {
       console.error('Unable to save language preference:', cause);
       Alert.alert(t('language.saveErrorTitle'), t('language.saveErrorMessage'));
     });
+  };
+
+  const handleWhatsAppRegistration = async () => {
+    const phoneNumber = BUSINESS_WHATSAPP_NUMBER.trim();
+    if (!/^\d{8,15}$/.test(phoneNumber)) {
+      Alert.alert(t('home.whatsappUnavailableTitle'), t('home.whatsappNumberNotConfigured'));
+      return;
+    }
+
+    const message = [
+      'Hello Ganpati Suvidha Team,',
+      '',
+      'I want to list my service on Ganpati Suvidha. Please guide me through the registration process.',
+      // '',
+      // 'My details are:',
+      // 'Name:',
+      // 'Mobile Number:',
+      // 'Service Category:',
+      // 'City / Locality:',
+      // 'Short Description of Service:',
+      // '',
+      // 'Please guide me through the registration process.',
+      '',
+      'Thank you.',
+    ].join('\n');
+    const encodedMessage = encodeURIComponent(message);
+    const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
+    const webWhatsAppUrl = `https://web.whatsapp.com/send?phone=${phoneNumber}&text=${encodedMessage}`;
+
+    try {
+      await Linking.openURL(whatsappUrl);
+    } catch (cause) {
+      if (__DEV__) {
+        console.warn('[home] Unable to open WhatsApp link', {
+          errorType: cause instanceof Error ? cause.name : typeof cause,
+        });
+      }
+
+      try {
+        await Linking.openURL(webWhatsAppUrl);
+      } catch (fallbackCause) {
+        if (__DEV__) {
+          console.warn('[home] Unable to open WhatsApp Web link', {
+            errorType: fallbackCause instanceof Error ? fallbackCause.name : typeof fallbackCause,
+          });
+        }
+        Alert.alert(t('home.whatsappUnavailableTitle'), t('home.whatsappOpenError'));
+      }
+    }
   };
 
   const renderHeader = () => (
@@ -461,7 +512,29 @@ export default function HomeScreen() {
           <Ionicons name="chevron-forward" size={18} color={colors.text} />
         </Pressable>
 
-        <Pressable
+        <View style={styles.whatsappBanner}>
+          <View style={styles.promoContent}>
+            <View style={styles.whatsappIcon}>
+              <Ionicons name="logo-whatsapp" size={23} color="#198754" />
+            </View>
+            <View style={styles.promoTextWrap}>
+              <AppText style={styles.promoTitle}>{t('home.whatsappTitle')}</AppText>
+              <AppText style={styles.promoText}>{t('home.whatsappSubtitle')}</AppText>
+              <Pressable
+                accessibilityRole="button"
+                onPress={() => void handleWhatsAppRegistration()}
+                style={styles.whatsappButton}
+              >
+                <Ionicons name="logo-whatsapp" size={17} color={colors.surface} />
+                <AppText style={styles.whatsappButtonText}>
+                  {t('home.whatsappContinue')}
+                </AppText>
+              </Pressable>
+            </View>
+          </View>
+        </View>
+
+        {/* <Pressable
           accessibilityRole="button"
           accessibilityLabel={`${t('home.listBusiness')}. ${t('home.registerWorker')}`}
           style={styles.promoBanner}
@@ -482,7 +555,7 @@ export default function HomeScreen() {
               </View>
             </View>
           </View>
-        </Pressable>
+        </Pressable> */}
 
         {/* <Pressable
   onPress={() => router.push('/supabase-test')}
@@ -930,6 +1003,24 @@ promoBanner: {
   borderWidth: 1,
   borderColor: '#F4D1B2',
 },
+whatsappBanner: {
+  backgroundColor: colors.surface,
+  borderRadius: 16,
+  paddingVertical: 16,
+  paddingHorizontal: 14,
+  marginHorizontal: 16,
+  marginTop: 16,
+  borderWidth: 1,
+  borderColor: '#F4D1B2',
+},
+whatsappIcon: {
+  width: 44,
+  height: 44,
+  borderRadius: 14,
+  backgroundColor: '#E8F5EC',
+  alignItems: 'center',
+  justifyContent: 'center',
+},
 promoContent: {
   flexDirection: 'row',
   alignItems: 'flex-start',
@@ -973,6 +1064,23 @@ promoButtonText: {
 flexShrink: 1,
 color: colors.text,
 fontSize: 13,
+  fontWeight: '700',
+},
+whatsappButton: {
+  alignSelf: 'flex-start',
+  flexDirection: 'row',
+  alignItems: 'center',
+  gap: 8,
+  marginTop: 12,
+  backgroundColor: '#198754',
+  borderRadius: 12,
+  paddingHorizontal: 13,
+  paddingVertical: 10,
+},
+whatsappButtonText: {
+  flexShrink: 1,
+  color: colors.surface,
+  fontSize: 13,
   fontWeight: '700',
 },
 
