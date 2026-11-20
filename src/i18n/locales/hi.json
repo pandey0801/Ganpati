@@ -217,11 +217,15 @@
     "cctv": "सीसीटीवी",
     "carpenter": "बढ़ई",
     "driver": "ड्राइवर",
-    "cleaning": "सफ़ाई",
+    "cleaning": "सफाई",
     "homeAppliance": "घरेलू उपकरण",
-    "gardening": "बागवानी",
+    "gardening": "माली",
     "beautySalon": "ब्यूटी और सैलून",
-    "constructionWorker": "निर्माण कामगार"
+    "constructionWorker": "निर्माण कामगार",
+    "cook": "रसोइया",
+    "tilesWorker": "टाइल्स मिस्त्री",
+    "compounder": "कंपाउंडर",
+    "babySitter": "बच्चों की देखभाल करने वाला"
   },
   "serviceCategories": {
     "homeMaintenance": "घरेलू रखरखाव",

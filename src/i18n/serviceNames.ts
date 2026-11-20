@@ -3,7 +3,9 @@ import type { TFunction } from 'i18next';
 const serviceNameKeys: Record<string, string> = {
   'ac-repair': 'serviceNames.acRepair',
   electrical: 'serviceNames.electrician',
+  electrician: 'serviceNames.electrician',
   plumbing: 'serviceNames.plumber',
+  plumber: 'serviceNames.plumber',
   painter: 'serviceNames.painter',
   painting: 'serviceNames.painter',
   cctv: 'serviceNames.cctv',
@@ -11,9 +13,15 @@ const serviceNameKeys: Record<string, string> = {
   driver: 'serviceNames.driver',
   cleaning: 'serviceNames.cleaning',
   'home-appliance': 'serviceNames.homeAppliance',
+  'home-appliances': 'serviceNames.homeAppliance',
   gardening: 'serviceNames.gardening',
+  gardener: 'serviceNames.gardening',
   'beauty-salon': 'serviceNames.beautySalon',
   'construction-worker': 'serviceNames.constructionWorker',
+  cook: 'serviceNames.cook',
+  'tiles-worker': 'serviceNames.tilesWorker',
+  compounder: 'serviceNames.compounder',
+  'baby-sitter': 'serviceNames.babySitter',
 };
 
 const serviceCategoryKeys: Record<string, string> = {
@@ -33,8 +41,9 @@ export function translateServiceName(
   originalName: string,
   t: TFunction,
 ): string {
-  const key = serviceNameKeys[serviceId];
-  return key ? t(key) : originalName;
+  const normalizedId = serviceId.trim().toLowerCase().replace(/[\s_]+/g, '-');
+  const key = serviceNameKeys[normalizedId];
+  return key ? t(key, { defaultValue: originalName }) : originalName;
 }
 
 export function translateServiceCategory(
