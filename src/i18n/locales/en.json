@@ -47,6 +47,28 @@
     "whatsappOpenError": "Could not open WhatsApp. Please try again or open WhatsApp Web manually.",
     "testSupabase": "Test Supabase"
   },
+  "donation": {
+    "heading": "Support Ganpati Seva with Your Donation",
+    "description": "Your contribution helps us serve the community better.",
+    "donate": "Click to Donate",
+    "viewList": "View List",
+    "illustration": "Ganpati illustration",
+    "whatsappMessage": "Namaste Ganpati Suvidha Team 🙏\n\nI would like to contribute towards Ganpati Seva.\n\nPlease share the donation payment details.\n\nThank you.\nGanpati Bappa Morya! 🙏",
+    "whatsappUnavailableTitle": "WhatsApp is unavailable",
+    "whatsappNumberNotConfigured": "The donation admin WhatsApp number has not been configured yet.",
+    "whatsappOpenError": "Could not open WhatsApp. Please try again or open the link on a device with WhatsApp available."
+  },
+  "donationList": {
+    "title": "Donation List",
+    "comingSoon": "The donor list will be available in a future update."
+  },
+  "advertisements": {
+    "pageLabel": "Advertisement {{current}} of {{total}}",
+    "imageLabel": "{{business}}: {{title}}. {{description}}",
+    "unavailableTitle": "Link unavailable",
+    "invalidDestination": "This advertisement link is not configured correctly.",
+    "openError": "Could not open this destination. Please try again."
+  },
   "services": {
     "title": "Services",
     "subtitle": "Find the support you need",

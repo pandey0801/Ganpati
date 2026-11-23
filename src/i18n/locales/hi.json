@@ -47,6 +47,28 @@
     "whatsappOpenError": "WhatsApp नहीं खुल सका। फिर से कोशिश करें या WhatsApp Web खोलें।",
     "testSupabase": "Supabase जाँचें"
   },
+  "donation": {
+    "heading": "गणपति सेवा में अपना योगदान दें",
+    "description": "आपका सहयोग हमें समाज की बेहतर सेवा करने में मदद करता है।",
+    "donate": "दान करने के लिए क्लिक करें",
+    "viewList": "दानदाताओं की सूची",
+    "illustration": "गणपति का चित्र",
+    "whatsappMessage": "नमस्ते गणपति सुविधा टीम 🙏\n\nमैं गणपति सेवा में अपना योगदान देना चाहता/चाहती हूँ।\n\nकृपया मुझे दान करने के लिए भुगतान की जानकारी भेजें।\n\nधन्यवाद।\nगणपति बप्पा मोरया! 🙏",
+    "whatsappUnavailableTitle": "WhatsApp उपलब्ध नहीं है",
+    "whatsappNumberNotConfigured": "दान के लिए एडमिन का WhatsApp नंबर अभी कॉन्फ़िगर नहीं किया गया है।",
+    "whatsappOpenError": "WhatsApp नहीं खुल सका। फिर से कोशिश करें या WhatsApp वाले डिवाइस पर लिंक खोलें।"
+  },
+  "donationList": {
+    "title": "दानदाताओं की सूची",
+    "comingSoon": "दानदाताओं की सूची भविष्य के अपडेट में उपलब्ध होगी।"
+  },
+  "advertisements": {
+    "pageLabel": "विज्ञापन {{current}}, कुल {{total}} में से",
+    "imageLabel": "{{business}}: {{title}}। {{description}}",
+    "unavailableTitle": "लिंक उपलब्ध नहीं है",
+    "invalidDestination": "इस विज्ञापन का लिंक सही तरीके से कॉन्फ़िगर नहीं है।",
+    "openError": "यह लिंक नहीं खुल सका। कृपया फिर से कोशिश करें।"
+  },
   "services": {
     "title": "सेवाएँ",
     "subtitle": "अपनी ज़रूरत की मदद पाएँ",

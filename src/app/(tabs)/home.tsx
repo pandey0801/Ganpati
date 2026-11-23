@@ -18,6 +18,8 @@ import { LinearGradient } from 'expo-linear-gradient';
 
 
 import AppText from '@/components/common/AppText';
+import AdvertisementCarousel from '@/components/home/AdvertisementCarousel';
+import DonationBanner from '@/components/home/DonationBanner';
 import ServiceLoadState from '@/components/services/ServiceLoadState';
 import { BUSINESS_WHATSAPP_NUMBER } from '@/constants/businessContact';
 import { colors } from '@/constants/colors';
@@ -422,6 +424,9 @@ export default function HomeScreen() {
             </Pressable>
           ))}
         </ScrollView>
+
+        {/* <DonationBanner /> */}
+        <AdvertisementCarousel />
 {/* 
         <View style={styles.bannerWrapper}>
           <View style={styles.banner}>
@@ -533,6 +538,8 @@ export default function HomeScreen() {
             </View>
           </View>
         </View>
+
+             <DonationBanner />
 
         {/* <Pressable
           accessibilityRole="button"
