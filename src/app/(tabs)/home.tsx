@@ -83,7 +83,7 @@ const moreCategory = {
   tint: '#F3F4F6',
 };
 
-console.log('categoryPresentationByServiceId', categoryPresentationByServiceId, 'categoryToServiceId', categoryToServiceId, 'moreCategory', moreCategory);
+// console.log('categoryPresentationByServiceId', categoryPresentationByServiceId, 'categoryToServiceId', categoryToServiceId, 'moreCategory', moreCategory);
 
 function getHomeCategories(
   services: Service[],
@@ -124,7 +124,7 @@ export default function HomeScreen() {
     { ...moreCategory, name: t('home.more'), emoji: '', order: Number.MAX_SAFE_INTEGER },
   ];
 
-  console.log('homeCategories', homeCategories, 'popularCategories', popularCategories, 'allCategories', allCategories);
+  // console.log('homeCategories', homeCategories, 'popularCategories', popularCategories, 'allCategories', allCategories);
 
   const navigateToServices = (categoryId?: string, query?: string) => {
     if (!categoryId && !query) {

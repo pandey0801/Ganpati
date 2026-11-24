@@ -1,7 +1,8 @@
-import { useRouter } from 'expo-router';
+import { useFocusEffect } from 'expo-router';
 import { useTranslation } from 'react-i18next';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import {
+  ActivityIndicator,
   Alert,
   FlatList,
   Image,
@@ -12,96 +13,94 @@ import {
   useWindowDimensions,
 } from 'react-native';
 
-import { advertisements, type Advertisement } from '@/constants/advertisements';
 import { colors } from '@/constants/colors';
+import { getAdvertisements } from '@/services/adsService';
+import { Advertisement } from '@/types/advertisement';
 
-const INTERNAL_ROUTES = ['/', '/services', '/search'] as const;
-type InternalRoute = (typeof INTERNAL_ROUTES)[number];
+function getValidClickUrl(value: string | null): string | null {
+  if (!value?.trim()) {
+    return null;
+  }
 
-type AdvertisementDestination =
-  | { type: 'internal'; route: InternalRoute }
-  | { type: 'external'; url: string };
-
-function isInternalRoute(value: string): value is InternalRoute {
-  return (INTERNAL_ROUTES as readonly string[]).includes(value);
-}
-
-function parseHttpsUrl(value: string): URL | null {
   try {
     const url = new URL(value.trim());
-    if (url.protocol !== 'https:' || !url.hostname || url.username || url.password) {
-      return null;
+    if (
+      (url.protocol === 'https:' || url.protocol === 'http:') &&
+      url.hostname &&
+      !url.username &&
+      !url.password
+    ) {
+      return url.href;
     }
-    return url;
   } catch {
     return null;
   }
-}
 
-function getDestination(advertisement: Advertisement): AdvertisementDestination | null {
-  const value = advertisement.actionUrl.trim();
-
-  switch (advertisement.actionType) {
-    case 'website': {
-      const url = parseHttpsUrl(value);
-      return url ? { type: 'external', url: url.href } : null;
-    }
-    case 'maps': {
-      const url = parseHttpsUrl(value);
-      const isGoogleMapsLink =
-        url?.hostname === 'maps.app.goo.gl' ||
-        (url !== null &&
-          ['google.com', 'www.google.com', 'maps.google.com'].includes(url.hostname) &&
-          url.pathname.startsWith('/maps'));
-      return url && isGoogleMapsLink
-        ? { type: 'external', url: url.href }
-        : null;
-    }
-    case 'whatsapp': {
-      const phoneNumber = /^\d{8,15}$/.test(value) ? value : null;
-      if (phoneNumber) {
-        return { type: 'external', url: `https://wa.me/${phoneNumber}` };
-      }
-
-      const url = parseHttpsUrl(value);
-      return url && url.hostname === 'wa.me' && /^\/\d{8,15}$/.test(url.pathname)
-        ? { type: 'external', url: url.href }
-        : null;
-    }
-    case 'phone': {
-      if (!/^\+?[\d\s()-]{7,20}$/.test(value)) {
-        return null;
-      }
-      const phoneNumber = value.replace(/[\s()-]/g, '');
-      const digits = phoneNumber.replace(/\D/g, '');
-      return digits.length >= 7 && digits.length <= 15
-        ? { type: 'external', url: `tel:${phoneNumber}` }
-        : null;
-    }
-    case 'internal':
-      return isInternalRoute(value) ? { type: 'internal', route: value } : null;
-    default:
-      return null;
-  }
+  return null;
 }
 
 export default function AdvertisementCarousel() {
-  const router = useRouter();
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const { width: screenWidth } = useWindowDimensions();
-  const language = i18n.resolvedLanguage === 'hi' ? 'hi' : 'en';
-  const activeAdvertisements = advertisements.filter((advertisement) => advertisement.active);
   const itemWidth = Math.max(0, screenWidth - 32);
   const itemHeight = itemWidth * (2 / 3);
+  const [advertisements, setAdvertisements] = useState<Advertisement[]>([]);
+  const [failedImageIds, setFailedImageIds] = useState<ReadonlySet<string>>(new Set());
+  const [isLoading, setIsLoading] = useState(true);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isInteracting, setIsInteracting] = useState(false);
   const currentIndexRef = useRef(0);
   const isInteractingRef = useRef(false);
   const listRef = useRef<FlatList<Advertisement>>(null);
   const resumeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const visibleAdvertisements = advertisements.filter(
+    (advertisement) => !failedImageIds.has(advertisement.id),
+  );
+
+  useFocusEffect(
+    useCallback(() => {
+      let isFocused = true;
+      setIsLoading(true);
+      setCurrentIndex(0);
+      currentIndexRef.current = 0;
+      setFailedImageIds(new Set());
+
+      void getAdvertisements()
+        .then((fetchedAdvertisements) => {
+          if (isFocused) {
+            setAdvertisements(fetchedAdvertisements);
+          }
+        })
+        .catch((cause: unknown) => {
+          if (__DEV__) {
+            console.error('[ads] Unable to load advertisements from Supabase', cause);
+          }
+          if (isFocused) {
+            setAdvertisements([]);
+          }
+        })
+        .finally(() => {
+          if (isFocused) {
+            setIsLoading(false);
+          }
+        });
+
+      return () => {
+        isFocused = false;
+      };
+    }, []),
+  );
 
   useEffect(() => {
-    if (activeAdvertisements.length < 2 || isInteracting) {
+    if (visibleAdvertisements.length === 0 || currentIndex >= visibleAdvertisements.length) {
+      setCurrentIndex(0);
+      currentIndexRef.current = 0;
+      listRef.current?.scrollToOffset({ offset: 0, animated: false });
+    }
+  }, [currentIndex, visibleAdvertisements.length]);
+
+  useEffect(() => {
+    if (visibleAdvertisements.length < 2 || isInteracting) {
       return;
     }
 
@@ -109,14 +108,14 @@ export default function AdvertisementCarousel() {
       if (isInteractingRef.current) {
         return;
       }
-      const nextIndex = (currentIndexRef.current + 1) % activeAdvertisements.length;
+      const nextIndex = (currentIndexRef.current + 1) % visibleAdvertisements.length;
       currentIndexRef.current = nextIndex;
       setCurrentIndex(nextIndex);
       listRef.current?.scrollToOffset({ offset: nextIndex * itemWidth, animated: true });
     }, 4500);
 
     return () => clearInterval(timer);
-  }, [activeAdvertisements.length, isInteracting, itemWidth]);
+  }, [visibleAdvertisements.length, isInteracting, itemWidth]);
 
   useEffect(
     () => () => {
@@ -126,10 +125,6 @@ export default function AdvertisementCarousel() {
     },
     [],
   );
-
-  if (activeAdvertisements.length === 0) {
-    return null;
-  }
 
   const pauseCarousel = () => {
     isInteractingRef.current = true;
@@ -157,22 +152,18 @@ export default function AdvertisementCarousel() {
   };
 
   const openAdvertisement = async (advertisement: Advertisement) => {
-    const destination = getDestination(advertisement);
-    if (!destination) {
+    const url = getValidClickUrl(advertisement.clickUrl);
+    if (!url) {
       Alert.alert(t('advertisements.unavailableTitle'), t('advertisements.invalidDestination'));
       return;
     }
 
-    if (destination.type === 'internal') {
-      router.push(destination.route);
-      return;
-    }
-
     try {
-      await Linking.openURL(destination.url);
+      await Linking.openURL(url);
     } catch (cause) {
       if (__DEV__) {
-        console.warn('[advertisements] Unable to open advertisement destination', {
+        console.warn('[ads] Unable to open advertisement destination', {
+          advertisementId: advertisement.id,
           errorType: cause instanceof Error ? cause.name : typeof cause,
         });
       }
@@ -188,11 +179,23 @@ export default function AdvertisementCarousel() {
     resumeTimer.current = setTimeout(resumeCarousel, 1000);
   };
 
+  if (isLoading) {
+    return (
+      <View style={styles.container}>
+        <ActivityIndicator color={colors.primary} />
+      </View>
+    );
+  }
+
+  if (visibleAdvertisements.length === 0) {
+    return null;
+  }
+
   return (
     <View style={styles.container}>
       <FlatList
         ref={listRef}
-        data={activeAdvertisements}
+        data={visibleAdvertisements}
         horizontal
         pagingEnabled
         snapToInterval={itemWidth}
@@ -208,28 +211,32 @@ export default function AdvertisementCarousel() {
         renderItem={({ item }) => (
           <Pressable
             accessibilityRole="button"
-            accessibilityLabel={t('advertisements.imageLabel', {
-              business: item.businessName[language],
-              title: item.title[language],
-              description: item.description[language],
-            })}
+            accessibilityLabel={`${item.title}. ${item.description}`}
             onPress={() => void openAdvertisement(item)}
             onPressIn={pauseCarousel}
             onPressOut={resumeCarouselSoon}
             style={[styles.card, { width: itemWidth, height: itemHeight }]}
           >
             <Image
-              source={item.image[language]}
+              source={{ uri: item.imageUrl }}
               style={styles.image}
               resizeMode="cover"
               accessible={false}
+              onError={() => {
+                if (__DEV__) {
+                  console.warn('[ads] Unable to load advertisement image', {
+                    advertisementId: item.id,
+                  });
+                }
+                setFailedImageIds((current) => new Set(current).add(item.id));
+              }}
             />
           </Pressable>
         )}
         scrollEventThrottle={100}
         onScroll={(event) => {
           const index = Math.round(event.nativeEvent.contentOffset.x / Math.max(1, itemWidth));
-          if (index >= 0 && index < activeAdvertisements.length) {
+          if (index >= 0 && index < visibleAdvertisements.length) {
             currentIndexRef.current = index;
             setCurrentIndex((current) => (current === index ? current : index));
           }
@@ -239,21 +246,21 @@ export default function AdvertisementCarousel() {
         onMomentumScrollBegin={pauseCarousel}
         onMomentumScrollEnd={(event) => {
           const index = Math.round(event.nativeEvent.contentOffset.x / Math.max(1, itemWidth));
-          const nextIndex = Math.min(index, activeAdvertisements.length - 1);
+          const nextIndex = Math.min(index, visibleAdvertisements.length - 1);
           currentIndexRef.current = nextIndex;
           setCurrentIndex(nextIndex);
           resumeCarousel();
         }}
       />
-      {activeAdvertisements.length > 1 && (
+      {visibleAdvertisements.length > 1 && (
         <View style={styles.pagination}>
-          {activeAdvertisements.map((advertisement, index) => (
+          {visibleAdvertisements.map((advertisement, index) => (
             <Pressable
               key={advertisement.id}
               accessibilityRole="button"
               accessibilityLabel={t('advertisements.pageLabel', {
                 current: index + 1,
-                total: activeAdvertisements.length,
+                total: visibleAdvertisements.length,
               })}
               accessibilityState={{ selected: currentIndex === index }}
               onPress={() => scrollToIndex(index)}
@@ -269,6 +276,7 @@ export default function AdvertisementCarousel() {
 const styles = StyleSheet.create({
   container: {
     width: '100%',
+    minHeight: 24,
     marginTop: 18,
   },
   card: {
