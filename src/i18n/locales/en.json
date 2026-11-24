@@ -62,6 +62,16 @@
     "title": "Donation List",
     "comingSoon": "The donor list will be available in a future update."
   },
+  "feedbackRating": {
+    "heading": "Feedback & Rating",
+    "subtitle": "Help us make Ganpati Suvidha better. We value your feedback!",
+    "feedback": "Feedback",
+    "rateApp": "Rate App",
+    "feedbackUnavailableTitle": "Feedback unavailable",
+    "feedbackOpenError": "Could not open the feedback form. Please try again.",
+    "rateUnavailableTitle": "Google Play unavailable",
+    "rateOpenError": "Could not open the app listing. Please try again."
+  },
   "advertisements": {
     "pageLabel": "Advertisement {{current}} of {{total}}",
     "imageLabel": "{{business}}: {{title}}. {{description}}",

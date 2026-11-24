@@ -20,6 +20,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import AppText from '@/components/common/AppText';
 import AdvertisementCarousel from '@/components/home/AdvertisementCarousel';
 import DonationBanner from '@/components/home/DonationBanner';
+import FeedbackRating from '@/components/home/FeedbackRating';
 import ServiceLoadState from '@/components/services/ServiceLoadState';
 import { BUSINESS_WHATSAPP_NUMBER } from '@/constants/businessContact';
 import { colors } from '@/constants/colors';
@@ -82,6 +83,8 @@ const moreCategory = {
   tint: '#F3F4F6',
 };
 
+console.log('categoryPresentationByServiceId', categoryPresentationByServiceId, 'categoryToServiceId', categoryToServiceId, 'moreCategory', moreCategory);
+
 function getHomeCategories(
   services: Service[],
   t: ReturnType<typeof useTranslation>['t'],
@@ -120,6 +123,8 @@ export default function HomeScreen() {
     ...homeCategories,
     { ...moreCategory, name: t('home.more'), emoji: '', order: Number.MAX_SAFE_INTEGER },
   ];
+
+  console.log('homeCategories', homeCategories, 'popularCategories', popularCategories, 'allCategories', allCategories);
 
   const navigateToServices = (categoryId?: string, query?: string) => {
     if (!categoryId && !query) {
@@ -539,7 +544,8 @@ export default function HomeScreen() {
           </View>
         </View>
 
-             <DonationBanner />
+        <DonationBanner />
+        <FeedbackRating />
 
         {/* <Pressable
           accessibilityRole="button"

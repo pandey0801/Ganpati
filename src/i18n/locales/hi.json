@@ -62,6 +62,16 @@
     "title": "दानदाताओं की सूची",
     "comingSoon": "दानदाताओं की सूची भविष्य के अपडेट में उपलब्ध होगी।"
   },
+  "feedbackRating": {
+    "heading": "प्रतिक्रिया और रेटिंग",
+    "subtitle": "गणपति सुविधा को बेहतर बनाने में हमारी मदद करें। हमें आपकी प्रतिक्रिया की सराहना है!",
+    "feedback": "प्रतिक्रिया",
+    "rateApp": "ऐप रेट करें",
+    "feedbackUnavailableTitle": "प्रतिक्रिया उपलब्ध नहीं है",
+    "feedbackOpenError": "प्रतिक्रिया फ़ॉर्म नहीं खुल सका। कृपया फिर से कोशिश करें।",
+    "rateUnavailableTitle": "Google Play उपलब्ध नहीं है",
+    "rateOpenError": "ऐप की सूची नहीं खुल सकी। कृपया फिर से कोशिश करें।"
+  },
   "advertisements": {
     "pageLabel": "विज्ञापन {{current}}, कुल {{total}} में से",
     "imageLabel": "{{business}}: {{title}}। {{description}}",
