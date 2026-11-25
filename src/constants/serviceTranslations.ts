@@ -47,7 +47,7 @@ export const serviceTranslations: Record<string, ServiceTranslation> = {
   },
   compounder: {
     name: 'कंपाउंडर',
-    description: 'फार्मेसी या क्लिनिक में दवाइयों और पर्चे से जुड़ी सहायता।',
+    description: 'मरीजों की प्राथमिक देखभाल, इंजेक्शन, ड्रेसिंग और दवाइयां देने का काम।',
     category: 'होम हेल्थकेयर',
   },
   'computer-operator': {
@@ -76,7 +76,7 @@ export const serviceTranslations: Record<string, ServiceTranslation> = {
     category: 'निर्माण और घर की मरम्मत',
   },
   fabrication: {
-    name: 'वेल्डिंग मिस्त्री',
+    name: 'वेल्डर',
     description: 'धातु का काम, वेल्डिंग, गेट, ग्रिल और कस्टम धातु निर्माण।',
     category: 'निर्माण और घर की मरम्मत',
   },
@@ -105,6 +105,11 @@ export const serviceTranslations: Record<string, ServiceTranslation> = {
     description: 'इन्वर्टर और बैटरी लगाना, सर्विसिंग और मरम्मत।',
     category: 'उपकरण और तकनीकी मरम्मत',
   },
+  'kitchen-chimney-repair': {
+    name: 'किचन चिमनी रिपेयर',
+    description: 'किचन चिमनी की सफाई, सर्विसिंग, इंस्टॉलेशन और मरम्मत।',
+    category: 'उपकरण और तकनीकी मरम्मत',
+  },
   labourer: {
     name: 'मज़दूर',
     description: 'निर्माण, सामान चढ़ाने-उतारने और अन्य कामों के लिए सामान्य मजदूरी और सहायता।',
@@ -121,7 +126,7 @@ export const serviceTranslations: Record<string, ServiceTranslation> = {
     category: 'ग्रूमिंग और सिलाई',
   },
   'mens-tailor': {
-    name: 'पुरुष दर्जी',
+    name: 'जेंट्स टेलर',
     description: 'पुरुषों के कपड़ों की सिलाई, बदलाव और फिटिंग।',
     category: 'ग्रूमिंग और सिलाई',
   },
@@ -152,7 +157,7 @@ export const serviceTranslations: Record<string, ServiceTranslation> = {
   },
   physiotherapist: {
     name: 'फिजियोथेरेपिस्ट',
-    description: 'फिजियोथेरेपी, पुनर्वास और चलने-फिरने में सहायता।',
+    description: 'फिजियोथेरेपी, पुनर्वास और दर्द कम करना।',
     category: 'होम हेल्थकेयर',
   },
   plumbing: {
@@ -177,11 +182,11 @@ export const serviceTranslations: Record<string, ServiceTranslation> = {
   },
   sweeper: {
     name: 'स्वीपर',
-    description: 'घर, दफ़्तर और व्यावसायिक जगहों की सफाई और झाड़ू लगाने की सेवा।',
+    description: 'बाथरूम की नियमित सफाई, धुलाई और स्वच्छता बनाए रखने का कार्य।',
     category: 'घरेलू स्टाफ और सेवाएं',
   },
   tailors: {
-    name: 'महिला दर्जी',
+    name: 'लेडीज टेलर',
     description: 'महिलाओं और पुरुषों के कपड़ों की सिलाई, बदलाव और फिटिंग।',
     category: 'ग्रूमिंग और सिलाई',
   },
