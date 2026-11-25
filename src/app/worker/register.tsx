@@ -21,7 +21,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import AppText from '@/components/common/AppText';
 import { colors } from '@/constants/colors';
 import { useServices } from '@/hooks/useServices';
-import { translateServiceCategory, translateServiceName } from '@/i18n/serviceNames';
+import { localizeService } from '@/utils/serviceLocalization';
 import {
   submitWorkerRegistration,
   WorkerRegistrationSubmissionError,
@@ -58,12 +58,13 @@ interface ServiceCategoryGroup {
 
 function groupServicesByCategory(
   services: Service[],
+  language: string,
   t: ReturnType<typeof useTranslation>['t'],
 ): ServiceCategoryGroup[] {
   const groups = new Map<string, ServiceCategoryGroup>();
 
   for (const service of services) {
-    const label = translateServiceCategory(service.category, t) ?? t('common.service');
+    const label = localizeService(service, language).category ?? t('common.service');
     const normalizedLabel = label.trim().toLowerCase();
     const group = groups.get(normalizedLabel);
 
@@ -150,7 +151,8 @@ function FieldError({ message }: { message?: string }) {
 
 export default function WorkerRegistrationScreen() {
   const router = useRouter();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const language = i18n.resolvedLanguage ?? i18n.language;
   const { services, isLoading: isLoadingServices, error: servicesError, retry } = useServices();
   const [userName, setUserName] = useState('');
   const [phone, setPhone] = useState('');
@@ -557,9 +559,9 @@ export default function WorkerRegistrationScreen() {
                     <AppText style={styles.helperText}>{t('registration.noCategories')}</AppText>
                   ) : (
                     <View style={styles.categoryGroups}>
-                      {groupServicesByCategory(services, t).map((group) => {
+                      {groupServicesByCategory(services, language, t).map((group) => {
                         const serviceLabels = group.services.map((service) =>
-                          translateServiceName(service.id, service.name, t).trim(),
+                          localizeService(service, language).name.trim(),
                         );
                         const labelCounts = new Map<string, number>();
                         for (const label of serviceLabels) {

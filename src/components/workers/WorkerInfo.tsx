@@ -4,6 +4,7 @@ import { StyleSheet, View } from 'react-native';
 import AppText from '@/components/common/AppText';
 import { colors } from '@/constants/colors';
 import { Worker } from '@/types/worker';
+import { localizeService } from '@/utils/serviceLocalization';
 import { useTranslation } from 'react-i18next';
 import { translateAvailability } from '@/i18n/serviceNames';
 
@@ -12,12 +13,29 @@ interface WorkerInfoProps {
 }
 
 export default function WorkerInfo({ worker }: WorkerInfoProps) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const localizedService = worker.service
+    ? localizeService(worker.service, i18n.resolvedLanguage ?? i18n.language)
+    : undefined;
 
   return (
     <View style={styles.container}>
       <AppText variant="subtitle">{t('workerInfo.about')}</AppText>
       <AppText variant="body" style={styles.description}>{worker.description}</AppText>
+      {localizedService ? (
+        <>
+          <View style={styles.metaRow}>
+            <AppText variant="caption" style={styles.label}>{t('workerInfo.service')}</AppText>
+            <AppText variant="body">{localizedService.name}</AppText>
+          </View>
+          {localizedService.category ? (
+            <View style={styles.metaRow}>
+              <AppText variant="caption" style={styles.label}>{t('workerInfo.category')}</AppText>
+              <AppText variant="body">{localizedService.category}</AppText>
+            </View>
+          ) : null}
+        </>
+      ) : null}
       <View style={styles.metaRow}>
         <AppText variant="caption" style={styles.label}>{t('workerInfo.location')}</AppText>
         <AppText variant="body">{worker.location}</AppText>

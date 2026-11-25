@@ -9,14 +9,16 @@ import {
 } from 'react-native';
 
 import { colors } from '@/constants/colors';
+import ServiceIcon from '@/components/services/ServiceIcon';
 import { useTranslation } from 'react-i18next';
-import { translateServiceCategory, translateServiceName } from '@/i18n/serviceNames';
+import { localizeService } from '@/utils/serviceLocalization';
 
 // import { supabase } from '../lib/supabase';
 import supabase from '../lib/supabase';
 
 export default function SupabaseTestScreen() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const language = i18n.resolvedLanguage ?? i18n.language;
   const [services, setServices] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -77,23 +79,26 @@ export default function SupabaseTestScreen() {
         ListEmptyComponent={
           <Text style={styles.message}>{t('supabaseTest.empty')}</Text>
         }
-        renderItem={({ item }) => (
-          <View style={styles.card}>
-            <Text style={styles.name}>
-              {item.icon ? `${item.icon} ` : ''}
-              {translateServiceName(item.id, item.name, t)}
-            </Text>
-            <Text style={styles.category}>
-              {t('supabaseTest.category', {
-                category: translateServiceCategory(item.category, t) ?? t('supabaseTest.notSpecified'),
-              })}
-            </Text>
-            <Text style={styles.description}>
-              {item.description || t('supabaseTest.noDescription')}
-            </Text>
-            <Text style={styles.id}>ID: {item.id}</Text>
-          </View>
-        )}
+        renderItem={({ item }) => {
+          const localizedService = localizeService(item, language);
+          return (
+            <View style={styles.card}>
+              <View style={styles.nameRow}>
+                <ServiceIcon icon={item.icon} size={22} />
+                <Text style={styles.name}>{localizedService.name}</Text>
+              </View>
+              <Text style={styles.category}>
+                {t('supabaseTest.category', {
+                  category: localizedService.category ?? t('supabaseTest.notSpecified'),
+                })}
+              </Text>
+              <Text style={styles.description}>
+                {localizedService.description || t('supabaseTest.noDescription')}
+              </Text>
+              <Text style={styles.id}>ID: {item.id}</Text>
+            </View>
+          );
+        }}
       />
     </View> 
   );
@@ -141,6 +146,11 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
     color: colors.text,
+  },
+  nameRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
   },
   category: {
     marginTop: 6,

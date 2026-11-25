@@ -31,7 +31,7 @@
     "noServicesFound": "No services found",
     "popularCategories": "Popular Categories",
     "seeAll": "See All",
-    "bannerTitle": "Trusted\nLocal Workers\nfor Your Needs",
+    "bannerTitle": "Bal Gangadhar Tilak\nGanpati Sthapana\nSamiti (Trust)",
     "bannerSubtitle": "Fast • Reliable • Affordable",
     "allCategories": "All Categories",
     "more": "More",
@@ -63,14 +63,11 @@
     "comingSoon": "The donor list will be available in a future update."
   },
   "feedbackRating": {
-    "heading": "Feedback & Rating",
+    "heading": "Feedback",
     "subtitle": "Help us make Ganpati Suvidha better. We value your feedback!",
     "feedback": "Feedback",
-    "rateApp": "Rate App",
     "feedbackUnavailableTitle": "Feedback unavailable",
-    "feedbackOpenError": "Could not open the feedback form. Please try again.",
-    "rateUnavailableTitle": "Google Play unavailable",
-    "rateOpenError": "Could not open the app listing. Please try again."
+    "feedbackOpenError": "Could not open the feedback form. Please try again."
   },
   "advertisements": {
     "pageLabel": "Advertisement {{current}} of {{total}}",
@@ -115,6 +112,8 @@
   },
   "workerInfo": {
     "about": "About",
+    "service": "Service",
+    "category": "Category",
     "location": "Location",
     "phone": "Phone",
     "availability": "Availability"
@@ -240,34 +239,5 @@
     "notSpecified": "Not specified",
     "noDescription": "No description",
     "unableToFetch": "Unable to fetch services"
-  },
-  "serviceNames": {
-    "acRepair": "AC Repair",
-    "electrician": "Electrician",
-    "plumber": "Plumber",
-    "painter": "Painter",
-    "cctv": "CCTV",
-    "carpenter": "Carpenter",
-    "driver": "Driver",
-    "cleaning": "Cleaning",
-    "homeAppliance": "Home Appliance",
-    "gardening": "Gardener",
-    "beautySalon": "Beauty & Salon",
-    "constructionWorker": "Construction Worker",
-    "cook": "Cook",
-    "tilesWorker": "Tiles Worker",
-    "compounder": "Compounder",
-    "babySitter": "Baby Sitter"
-  },
-  "serviceCategories": {
-    "homeMaintenance": "Home Maintenance",
-    "housekeeping": "Housekeeping",
-    "outdoorCare": "Outdoor Care",
-    "homeImprovement": "Home Improvement",
-    "securityServices": "Security Services",
-    "transportation": "Transportation",
-    "homeAppliances": "Home Appliances",
-    "personalCare": "Personal Care",
-    "construction": "Construction"
   }
 }

@@ -2,9 +2,10 @@ import React from 'react';
 import { Image, Pressable, StyleSheet, View } from 'react-native';
 
 import AppText from '@/components/common/AppText';
+import ServiceIcon from '@/components/services/ServiceIcon';
 import { colors } from '@/constants/colors';
-import { translateServiceName } from '@/i18n/serviceNames';
 import { Service } from '@/types/service';
+import { localizeService } from '@/utils/serviceLocalization';
 import { useTranslation } from 'react-i18next';
 
 interface ServiceCardProps {
@@ -13,16 +14,25 @@ interface ServiceCardProps {
 }
 
 export default function ServiceCard({ service, onPress }: ServiceCardProps) {
-  const { t } = useTranslation();
+  const { i18n } = useTranslation();
+  const localizedService = localizeService(
+    service,
+    i18n.resolvedLanguage ?? i18n.language,
+  );
 
   return (
     <Pressable onPress={onPress} style={styles.card}>
       <Image source={{ uri: service.image }} style={styles.image} />
       <View style={styles.info}>
-        <AppText variant="caption" style={styles.icon}>{service.icon}</AppText>
-        <AppText variant="subtitle">{translateServiceName(service.id, service.name, t)}</AppText>
+        <ServiceIcon
+          icon={service.icon}
+          size={24}
+          textVariant="caption"
+          textStyle={styles.icon}
+        />
+        <AppText variant="subtitle">{localizedService.name}</AppText>
         <AppText variant="small" style={styles.descriptionNumberOfLines}>
-          {service.description}
+          {localizedService.description}
         </AppText>
       </View>
     </Pressable>

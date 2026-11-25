@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 
-import { getServices } from '@/services/serviceService';
+import { getServices, ServiceSortOrder } from '@/services/serviceService';
 import { Service } from '@/types/service';
 
 interface UseServicesResult {
@@ -10,7 +10,9 @@ interface UseServicesResult {
   retry: () => void;
 }
 
-export function useServices(): UseServicesResult {
+export function useServices(
+  sortOrder: ServiceSortOrder = 'name',
+): UseServicesResult {
   const [services, setServices] = useState<Service[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
@@ -28,7 +30,7 @@ export function useServices(): UseServicesResult {
       setError(null);
 
       try {
-        const fetchedServices = await getServices();
+        const fetchedServices = await getServices(sortOrder);
         if (isActive) {
           setServices(fetchedServices);
         }
@@ -52,7 +54,7 @@ export function useServices(): UseServicesResult {
     return () => {
       isActive = false;
     };
-  }, [requestId]);
+  }, [requestId, sortOrder]);
 
   return { services, isLoading, error, retry };
 }

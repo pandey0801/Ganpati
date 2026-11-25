@@ -2,9 +2,10 @@ import React from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 
 import AppText from '@/components/common/AppText';
+import ServiceIcon from '@/components/services/ServiceIcon';
 import { colors } from '@/constants/colors';
-import { translateServiceName } from '@/i18n/serviceNames';
 import { Service } from '@/types/service';
+import { localizeService } from '@/utils/serviceLocalization';
 import { useTranslation } from 'react-i18next';
 
 interface ServiceListItemProps {
@@ -13,17 +14,21 @@ interface ServiceListItemProps {
 }
 
 export default function ServiceListItem({ service, onPress }: ServiceListItemProps) {
-  const { t } = useTranslation();
+  const { i18n } = useTranslation();
+  const localizedService = localizeService(
+    service,
+    i18n.resolvedLanguage ?? i18n.language,
+  );
 
   return (
     <Pressable onPress={onPress} style={styles.item}>
       <View style={styles.iconWrap}>
-        <AppText variant="title" style={styles.icon}>{service.icon}</AppText>
+        <ServiceIcon icon={service.icon} size={22} textStyle={styles.icon} />
       </View>
       <View style={styles.content}>
-        <AppText variant="subtitle">{translateServiceName(service.id, service.name, t)}</AppText>
+        <AppText variant="subtitle">{localizedService.name}</AppText>
         <AppText variant="small" style={styles.description}>
-          {service.description}
+          {localizedService.description}
         </AppText>
       </View>
     </Pressable>

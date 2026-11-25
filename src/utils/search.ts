@@ -3,10 +3,10 @@ import { Worker } from '@/types/worker';
 
 const normalizeCategory = (value: string) =>
   value
-    .toLowerCase()
-    .replace(/&/g, 'and')
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-+|-+$/g, '');
+    .toLocaleLowerCase()
+    .replace(/&/g, ' and ')
+    .replace(/[\s_-]+/g, ' ')
+    .trim();
 
 const categoryAliases: Record<string, string[]> = {
   'ac-repair': ['ac-repair', 'ac repair', 'air-conditioner', 'air conditioner', 'ac'],
@@ -22,46 +22,79 @@ const categoryAliases: Record<string, string[]> = {
   driver: ['driver', 'transport'],
 };
 
+function getCategoryAliases(category: string): string[] {
+  const normalizedCategory = normalizeCategory(category);
+  const match = Object.entries(categoryAliases).find(
+    ([alias]) => normalizeCategory(alias) === normalizedCategory,
+  );
+  return match?.[1] ?? [category];
+}
+
+function matchesCategory(terms: Array<string | undefined>, category: string): boolean {
+  const aliases = getCategoryAliases(category).map(normalizeCategory);
+  return terms.some((term) => {
+    if (!term) {
+      return false;
+    }
+
+    const normalizedTerm = normalizeCategory(term);
+    return aliases.some(
+      (alias) =>
+        normalizedTerm === alias ||
+        normalizedTerm.includes(alias) ||
+        alias.includes(normalizedTerm),
+    );
+  });
+}
+
+type LocalizedServiceFields = {
+  name: string;
+  description?: string;
+  category?: string;
+};
+
 export function filterServices(
   services: Service[],
   query: string,
   category?: string,
-  getTranslatedName?: (service: Service) => string,
+  getLocalizedService?: (service: Service) => LocalizedServiceFields,
 ) {
   let filteredServices = services;
 
   if (category) {
-    const normalizedCategory = normalizeCategory(category);
-    const aliases = categoryAliases[normalizedCategory] || [normalizedCategory];
-
     filteredServices = services.filter((service) => {
-      const serviceTerms = [service.name, service.category || '', service.id];
-      return serviceTerms.some((term) => {
-        const normalizedTerm = normalizeCategory(term);
-        return aliases.some((alias) => {
-          const normalizedAlias = normalizeCategory(alias);
-          return normalizedTerm === normalizedAlias || normalizedTerm.includes(normalizedAlias);
-        });
-      });
+      const localized = getLocalizedService?.(service);
+      return matchesCategory(
+        [service.name, service.category, service.id, localized?.name, localized?.category],
+        category,
+      );
     });
   }
 
   if (!query.trim()) return filteredServices;
 
-  const normalized = query.toLowerCase();
-  return filteredServices.filter((service) =>
-    service.name.toLowerCase().includes(normalized) ||
-    (getTranslatedName?.(service) ?? '').toLowerCase().includes(normalized) ||
-    (service.description || '').toLowerCase().includes(normalized) ||
-    (service.category || '').toLowerCase().includes(normalized),
-  );
+  const normalized = query.toLocaleLowerCase();
+  return filteredServices.filter((service) => {
+    const localized = getLocalizedService?.(service);
+    return [
+      service.id,
+      service.name,
+      service.description,
+      service.category,
+      localized?.name,
+      localized?.description,
+      localized?.category,
+    ].some((term) => term?.toLocaleLowerCase().includes(normalized));
+  });
 }
 
 export function filterWorkers(
   workers: Worker[],
   query: string,
   filters: { serviceId?: string; category?: string; availability?: string } = {},
-  getTranslatedServiceName?: (worker: Worker) => string,
+  getLocalizedService?: (
+    worker: Worker,
+  ) => Pick<LocalizedServiceFields, 'name' | 'category'> | undefined,
 ) {
   let filteredWorkers = workers;
 
@@ -72,22 +105,19 @@ export function filterWorkers(
   }
 
   if (filters.category) {
-    const category = normalizeCategory(filters.category);
-    const aliases = categoryAliases[category] ?? [category];
-    filteredWorkers = filteredWorkers.filter((worker) =>
-      [worker.serviceId, worker.service?.name ?? '', worker.service?.category ?? '']
-        .some((term) => {
-          const normalizedTerm = normalizeCategory(term);
-          return aliases.some((alias) => {
-            const normalizedAlias = normalizeCategory(alias);
-            return (
-              normalizedTerm === normalizedAlias ||
-              normalizedTerm.includes(normalizedAlias) ||
-              normalizedAlias.includes(normalizedTerm)
-            );
-          });
-        }),
-    );
+    filteredWorkers = filteredWorkers.filter((worker) => {
+      const localized = getLocalizedService?.(worker);
+      return matchesCategory(
+        [
+          worker.serviceId,
+          worker.service?.name,
+          worker.service?.category,
+          localized?.name,
+          localized?.category,
+        ],
+        filters.category!,
+      );
+    });
   }
 
   if (filters.availability) {
@@ -99,14 +129,18 @@ export function filterWorkers(
 
   if (!query.trim()) return filteredWorkers;
 
-  const normalized = query.toLowerCase();
-  return filteredWorkers.filter((worker) =>
-    worker.name.toLowerCase().includes(normalized) ||
-    worker.location.toLowerCase().includes(normalized) ||
-    worker.description.toLowerCase().includes(normalized) ||
-    worker.serviceId.toLowerCase().includes(normalized) ||
-    (getTranslatedServiceName?.(worker) ?? '').toLowerCase().includes(normalized) ||
-    (worker.service?.name ?? '').toLowerCase().includes(normalized) ||
-    (worker.service?.category ?? '').toLowerCase().includes(normalized),
-  );
+  const normalized = query.toLocaleLowerCase();
+  return filteredWorkers.filter((worker) => {
+    const localized = getLocalizedService?.(worker);
+    return [
+      worker.name,
+      worker.location,
+      worker.description,
+      worker.serviceId,
+      worker.service?.name,
+      worker.service?.category,
+      localized?.name,
+      localized?.category,
+    ].some((term) => term?.toLocaleLowerCase().includes(normalized));
+  });
 }

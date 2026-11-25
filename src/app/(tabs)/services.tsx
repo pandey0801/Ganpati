@@ -11,15 +11,16 @@ import ServiceLoadState from '@/components/services/ServiceLoadState';
 import { colors } from '@/constants/colors';
 import { useServices } from '@/hooks/useServices';
 import { filterServices } from '@/utils/search';
-import { translateServiceName } from '@/i18n/serviceNames';
+import { localizeService } from '@/utils/serviceLocalization';
 
 export default function ServicesScreen() {
   const router = useRouter();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [isInputFocused, setIsInputFocused] = useState(false);
   const { category, query: searchQuery } = useLocalSearchParams<{ category?: string | string[]; query?: string | string[] }>();
   const [query, setQuery] = useState(Array.isArray(searchQuery) ? searchQuery[0] ?? '' : searchQuery ?? '');
   const { services, isLoading, error, retry } = useServices();
+  const language = i18n.resolvedLanguage ?? i18n.language;
   const selectedCategory = Array.isArray(category) ? category[0] : category;
 
   const filteredServices = useMemo(
@@ -28,9 +29,9 @@ export default function ServicesScreen() {
         services,
         query,
         selectedCategory,
-        (service) => translateServiceName(service.id, service.name, t),
+        (service) => localizeService(service, language),
       ),
-    [services, query, selectedCategory, t],
+    [services, query, selectedCategory, language],
   );
 
   return (

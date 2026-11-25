@@ -19,47 +19,44 @@ import { LinearGradient } from 'expo-linear-gradient';
 
 import AppText from '@/components/common/AppText';
 import AdvertisementCarousel from '@/components/home/AdvertisementCarousel';
-import DonationBanner from '@/components/home/DonationBanner';
+// import DonationBanner from '@/components/home/DonationBanner';
+import ServiceIcon from '@/components/services/ServiceIcon';
 import FeedbackRating from '@/components/home/FeedbackRating';
 import ServiceLoadState from '@/components/services/ServiceLoadState';
 import { BUSINESS_WHATSAPP_NUMBER } from '@/constants/businessContact';
 import { colors } from '@/constants/colors';
 import { useServices } from '@/hooks/useServices';
 import { setAppLanguage } from '@/i18n';
-import { translateServiceCategory, translateServiceName } from '@/i18n/serviceNames';
 import { Service } from '@/types/service';
+import { localizeService } from '@/utils/serviceLocalization';
 
 const cardBorder = colors.border;
 
 interface CategoryPresentation {
   id: string;
-  name: string;
-  icon: keyof typeof Ionicons.glyphMap;
   tint: string;
-  order: number;
 }
 
 interface HomeCategory {
   id: string;
   name: string;
-  icon?: keyof typeof Ionicons.glyphMap;
-  emoji: string;
+  supabaseIcon: string | null;
+  ionIcon?: keyof typeof Ionicons.glyphMap;
   tint: string;
-  order: number;
 }
 
 const categoryPresentationByServiceId: Record<string, CategoryPresentation> = {
-  'ac-repair': { id: 'ac-repair', name: 'AC Repair', icon: 'snow-outline', tint: '#EAF3FF', order: 0 },
-  electrical: { id: 'electrical', name: 'Electrician', icon: 'flash-outline', tint: '#FFF8D8', order: 1 },
-  plumbing: { id: 'plumbing', name: 'Plumber', icon: 'water-outline', tint: '#EAF6F3', order: 2 },
-  painter: { id: 'painting', name: 'Painter', icon: 'brush-outline', tint: '#FDECF4', order: 3 },
-  cctv: { id: 'cctv', name: 'CCTV', icon: 'videocam-outline', tint: '#EEF7FF', order: 4 },
-  carpenter: { id: 'carpenter', name: 'Carpenter', icon: 'construct-outline', tint: '#F6F4FF', order: 5 },
-  driver: { id: 'driver', name: 'Driver', icon: 'car-outline', tint: '#EEF8F2', order: 6 },
-  cleaning: { id: 'cleaning', name: 'Cleaning', icon: 'sparkles-outline', tint: '#EEF7FF', order: 7 },
-  'home-appliance': { id: 'home-appliance', name: 'Home Appliance', icon: 'tv-outline', tint: '#F5F1FF', order: 8 },
-  gardening: { id: 'gardening', name: 'Gardening', icon: 'leaf-outline', tint: '#EAF9F2', order: 9 },
-  'beauty-salon': { id: 'beauty-salon', name: 'Beauty & Salon', icon: 'sparkles-outline', tint: '#FFF1F7', order: 10 },
+  'ac-repair': { id: 'ac-repair', tint: '#EAF3FF' },
+  electrical: { id: 'electrical', tint: '#FFF8D8' },
+  plumbing: { id: 'plumbing', tint: '#EAF6F3' },
+  painter: { id: 'painting', tint: '#FDECF4' },
+  cctv: { id: 'cctv', tint: '#EEF7FF' },
+  carpenter: { id: 'carpenter', tint: '#F6F4FF' },
+  driver: { id: 'driver', tint: '#EEF8F2' },
+  cleaning: { id: 'cleaning', tint: '#EEF7FF' },
+  'home-appliance': { id: 'home-appliance', tint: '#F5F1FF' },
+  gardening: { id: 'gardening', tint: '#EAF9F2' },
+  'beauty-salon': { id: 'beauty-salon', tint: '#FFF1F7' },
 };
 
 const categoryToServiceId: Record<string, string> = {
@@ -79,30 +76,27 @@ const categoryToServiceId: Record<string, string> = {
 const moreCategory = {
   id: 'more',
   name: 'More',
-  icon: 'ellipsis-horizontal' as keyof typeof Ionicons.glyphMap,
+  supabaseIcon: '',
+  ionIcon: 'ellipsis-horizontal' as keyof typeof Ionicons.glyphMap,
   tint: '#F3F4F6',
 };
 
-// console.log('categoryPresentationByServiceId', categoryPresentationByServiceId, 'categoryToServiceId', categoryToServiceId, 'moreCategory', moreCategory);
-
 function getHomeCategories(
   services: Service[],
-  t: ReturnType<typeof useTranslation>['t'],
+  language: string,
 ): HomeCategory[] {
   return services
-    .map((service, index) => {
+    .map((service) => {
       const presentation = categoryPresentationByServiceId[service.id];
+      const localizedService = localizeService(service, language);
 
       return {
         id: presentation?.id ?? service.id,
-        name: translateServiceName(service.id, presentation?.name ?? service.name, t),
-        icon: presentation?.icon,
-        emoji: service.icon,
+        name: localizedService.name,
+        supabaseIcon: service.icon,
         tint: presentation?.tint ?? '#F3F4F6',
-        order: presentation?.order ?? Object.keys(categoryPresentationByServiceId).length + index,
       };
     })
-    .sort((first, second) => first.order - second.order || first.name.localeCompare(second.name));
 }
 
 
@@ -112,19 +106,21 @@ export default function HomeScreen() {
   const { t, i18n } = useTranslation();
   const [searchText, setSearchText] = useState('');
   const [isSearchFocused, setIsSearchFocused] = useState(false);
-  const { services, isLoading, error, retry } = useServices();
+  const { services, isLoading, error, retry } = useServices('created_at');
   const screenWidth = Dimensions.get('window').width;
   const gridItemWidth = (screenWidth - 32 - 3 * 10) / 4;
-  const homeCategories = useMemo(() => getHomeCategories(services, t), [services, t]);
+  const language = i18n.resolvedLanguage ?? i18n.language;
+  const homeCategories = useMemo(
+    () => getHomeCategories(services, language),
+    [services, language],
+  );
   const popularCategories = homeCategories.filter((category) =>
     ['ac-repair', 'electrical', 'plumbing', 'painting'].includes(category.id),
   );
   const allCategories = [
     ...homeCategories,
-    { ...moreCategory, name: t('home.more'), emoji: '', order: Number.MAX_SAFE_INTEGER },
+    { ...moreCategory, name: t('home.more') },
   ];
-
-  // console.log('homeCategories', homeCategories, 'popularCategories', popularCategories, 'allCategories', allCategories);
 
   const navigateToServices = (categoryId?: string, query?: string) => {
     if (!categoryId && !query) {
@@ -260,29 +256,36 @@ export default function HomeScreen() {
       const description = service.description?.toLowerCase() ?? '';
       const category = service.category?.toLowerCase() ?? '';
       const id = service.id?.toLowerCase() ?? '';
-      const localizedName = translateServiceName(service.id, service.name, t).toLowerCase();
-      const localizedCategory = translateServiceCategory(service.category, t)?.toLowerCase() ?? '';
+      const localizedService = localizeService(service, language);
+      const localizedName = localizedService.name.toLowerCase();
+      const localizedDescription = localizedService.description?.toLowerCase() ?? '';
+      const localizedCategory = localizedService.category?.toLowerCase() ?? '';
 
       return (
         name.includes(query) ||
         localizedName.includes(query) ||
         description.includes(query) ||
+        localizedDescription.includes(query) ||
         category.includes(query) ||
         localizedCategory.includes(query) ||
         id.includes(query)
       );
     })
     .slice(0, 8)
-    .map((service) => ({
-      id: service.id,
-      title: translateServiceName(service.id, service.name, t),
-      subtitle: translateServiceCategory(service.category, t) ?? t('common.service'),
-      route: {
-        pathname: '/service/[id]' as const,
-        params: { id: service.id },
-      },
-    }));
-  }, [searchText, services, t]);
+    .map((service) => {
+      const localizedService = localizeService(service, language);
+      return {
+        id: service.id,
+        icon: service.icon,
+        title: localizedService.name,
+        subtitle: localizedService.category ?? t('common.service'),
+        route: {
+          pathname: '/service/[id]' as const,
+          params: { id: service.id },
+        },
+      };
+    });
+  }, [searchText, services, language, t]);
 
   if (isLoading) {
     return (
@@ -380,7 +383,12 @@ export default function HomeScreen() {
                   }}
                 >
                   <View style={styles.searchResultIcon}>
-                    <Ionicons name="construct-outline" size={18} color={colors.primary} />
+                    <ServiceIcon
+                      icon={result.icon}
+                      size={18}
+                      textVariant="caption"
+                      textStyle={styles.searchResultIconText}
+                    />
                   </View>
 
                   <View style={styles.searchResultText}>
@@ -419,10 +427,10 @@ export default function HomeScreen() {
               onPress={() => navigateToServiceDetail(category.id)}
             >
               <View style={[styles.categoryIconWrap, { backgroundColor: category.tint }]}>
-                {category.icon ? (
-                  <Ionicons name={category.icon} size={20} color={colors.primary} />
+                {category.ionIcon ? (
+                  <Ionicons name={category.ionIcon} size={20} color={colors.primary} />
                 ) : (
-                  <AppText style={styles.categoryEmoji}>{category.emoji}</AppText>
+                  <ServiceIcon icon={category.supabaseIcon} size={22} textStyle={styles.categoryEmoji} />
                 )}
               </View>
               <AppText style={styles.categoryLabel}>{category.name}</AppText>
@@ -432,31 +440,6 @@ export default function HomeScreen() {
 
         {/* <DonationBanner /> */}
         <AdvertisementCarousel />
-{/* 
-        <View style={styles.bannerWrapper}>
-          <View style={styles.banner}>
-            <View style={styles.bannerContent}>
-              <AppText style={styles.bannerTitle}>{t('home.bannerTitle')}</AppText>
-
-              <AppText style={styles.bannerSubtitle}>{t('home.bannerSubtitle')}</AppText>
-
-              <Pressable
-                style={styles.bannerAction}
-                onPress={() => navigateToServices()}
-              >
-                <Ionicons name="arrow-forward" size={20} color={colors.primary} />
-              </Pressable>
-            </View>
-
-            <View style={styles.bannerImageWrapper}>
-              <Image
-                source={require('../../../assets/images/man1.png')}
-                style={styles.bannerImage}
-                resizeMode="contain"
-              />
-            </View>
-          </View>
-        </View> */}
 
         <View style={styles.bannerWrapper}>
           <LinearGradient
@@ -471,7 +454,7 @@ export default function HomeScreen() {
             <View style={styles.bannerContent}>
               <AppText style={styles.bannerTitle}>{t('home.bannerTitle')}</AppText>
 
-              <AppText style={styles.bannerSubtitle}>{t('home.bannerSubtitle')}</AppText>
+              {/* <AppText style={styles.bannerSubtitle}>{t('home.bannerSubtitle')}</AppText> */}
 
               <Pressable
                 style={styles.bannerAction}
@@ -483,7 +466,7 @@ export default function HomeScreen() {
 
             <View style={styles.bannerImageWrapper}>
               <Image
-                source={require('../../../assets/images/man1.png')}
+                source={require('../../../assets/images/ganpati-icon.png')}
                 style={styles.bannerImage}
                 resizeMode="contain"
               />
@@ -503,10 +486,10 @@ export default function HomeScreen() {
               onPress={() => navigateToServiceDetail(category.id)}
             >
               <View style={[styles.gridIconWrap, { backgroundColor: category.tint }]}>
-                {category.icon ? (
-                  <Ionicons name={category.icon} size={17} color={colors.primary} />
+                {category.ionIcon ? (
+                  <Ionicons name={category.ionIcon} size={17} color={colors.primary} />
                 ) : (
-                  <AppText style={styles.categoryEmoji}>{category.emoji}</AppText>
+                  <ServiceIcon icon={category.supabaseIcon} size={22} textStyle={styles.categoryEmoji} />
                 )}
               </View>
               <AppText style={styles.gridLabel}>{category.name}</AppText>
@@ -544,7 +527,7 @@ export default function HomeScreen() {
           </View>
         </View>
 
-        <DonationBanner />
+        {/* <DonationBanner /> */}
         <FeedbackRating />
 
         {/* <Pressable
@@ -866,6 +849,9 @@ bannerImageWrapper: {
   justifyContent: 'center',
   alignItems: 'center',
   paddingRight: 10,
+  overflow: 'hidden',
+  borderTopRightRadius: 20,
+  borderBottomRightRadius: 20,
 },
 // avatarCircle: {
 //   width: 110,
@@ -879,12 +865,10 @@ bannerImageWrapper: {
 //   alignItems: 'center',
 // },
 bannerImage: {
-       position: 'absolute',
-        bottom: -5,
-        right: -10, // Pushes it completely to the right edge
-        width: 160, // Adjust this based on your transparent PNG
-        height: 155,
-        zIndex: 1,
+    width: 120,
+    height: 120,
+    borderRadius: 16,
+    zIndex: 1,
   },
 // bannerImage: {
 //   width: 170,
@@ -1124,6 +1108,11 @@ searchResultIcon: {
   alignItems: 'center',
   justifyContent: 'center',
   marginRight: 12,
+},
+searchResultIconText: {
+  fontSize: 18,
+  lineHeight: 22,
+  color: colors.primary,
 },
 
 searchResultText: {

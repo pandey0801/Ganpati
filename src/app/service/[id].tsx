@@ -20,7 +20,8 @@ import WorkerImage from '@/components/workers/WorkerImage';
 import { colors } from '@/constants/colors';
 import { useServices } from '@/hooks/useServices';
 import { useWorkers } from '@/hooks/useWorkers';
-import { translateAvailability, translateServiceCategory, translateServiceName } from '@/i18n/serviceNames';
+import { translateAvailability } from '@/i18n/serviceNames';
+import { localizeService } from '@/utils/serviceLocalization';
 
 const featureItems = [
   { icon: 'shield-checkmark-outline', label: 'serviceDetail.verifiedWorkers' },
@@ -30,7 +31,8 @@ const featureItems = [
 
 export default function ServiceDetailScreen() {
   const router = useRouter();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const language = i18n.resolvedLanguage ?? i18n.language;
   const { id } = useLocalSearchParams<{ id: string }>();
   const { services, isLoading, error, retry } = useServices();
   const {
@@ -40,6 +42,7 @@ export default function ServiceDetailScreen() {
     retry: retryWorkers,
   } = useWorkers({ serviceId: id });
   const service = services.find((item) => item.id === id);
+  const localizedService = service ? localizeService(service, language) : undefined;
 
   const renderNavigationBar = () => (
     <View style={styles.navBar}>
@@ -102,11 +105,11 @@ export default function ServiceDetailScreen() {
         <View style={styles.bannerCard}>
           <View style={styles.bannerTextWrap}>
             <AppText variant="title" style={styles.bannerTitle}>
-              {translateServiceName(service.id, service.name, t)}
+              {localizedService?.name}
             </AppText>
-            <AppText style={styles.bannerSubtitle}>
-              {translateServiceCategory(service.category, t) || t('serviceDetail.defaultCategory')}
-            </AppText>
+            {/* <AppText style={styles.bannerSubtitle}>
+              {localizedService?.category || t('serviceDetail.defaultCategory')}
+            </AppText> */}
           </View>
 
           <View style={styles.bannerArtWrap}>

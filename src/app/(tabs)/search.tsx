@@ -14,12 +14,12 @@ import WorkerLoadState from '@/components/workers/WorkerLoadState';
 import WorkerCard from '@/components/workers/WorkerCard';
 import { colors } from '@/constants/colors';
 import { useWorkers } from '@/hooks/useWorkers';
-import { translateServiceName } from '@/i18n/serviceNames';
 import { filterWorkers } from '@/utils/search';
+import { localizeService } from '@/utils/serviceLocalization';
 
 export default function SearchScreen() {
   const router = useRouter();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [isInputFocused, setIsInputFocused] = useState(false);
   const { serviceId, category, availability } = useLocalSearchParams<{
     serviceId?: string | string[];
@@ -28,6 +28,7 @@ export default function SearchScreen() {
   }>();
   const [query, setQuery] = useState('');
   const { workers, isLoading, error, retry } = useWorkers();
+  const language = i18n.resolvedLanguage ?? i18n.language;
   const selectedServiceId = Array.isArray(serviceId) ? serviceId[0] : serviceId;
   const selectedCategory = Array.isArray(category) ? category[0] : category;
   const selectedAvailability = Array.isArray(availability) ? availability[0] : availability;
@@ -41,9 +42,9 @@ export default function SearchScreen() {
       },
       (worker) =>
         worker.service
-          ? translateServiceName(worker.service.id, worker.service.name, t)
-          : ''),
-    [workers, query, selectedServiceId, selectedCategory, selectedAvailability, t],
+          ? localizeService(worker.service, language)
+          : undefined),
+    [workers, query, selectedServiceId, selectedCategory, selectedAvailability, language],
   );
 
   return (

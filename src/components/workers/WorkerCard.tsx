@@ -4,6 +4,7 @@ import { Pressable, StyleSheet, View } from 'react-native';
 import AppText from '@/components/common/AppText';
 import WorkerImage from '@/components/workers/WorkerImage';
 import { colors } from '@/constants/colors';
+import { localizeService } from '@/utils/serviceLocalization';
 import { Worker } from '@/types/worker';
 import { translateAvailability } from '@/i18n/serviceNames';
 import { useTranslation } from 'react-i18next';
@@ -14,7 +15,10 @@ interface WorkerCardProps {
 }
 
 export default function WorkerCard({ worker, onPress }: WorkerCardProps) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const localizedService = worker.service
+    ? localizeService(worker.service, i18n.resolvedLanguage ?? i18n.language)
+    : undefined;
 
   return (
     <Pressable onPress={onPress} style={styles.card}>
@@ -22,7 +26,12 @@ export default function WorkerCard({ worker, onPress }: WorkerCardProps) {
       <View style={styles.info}>
         <AppText variant="subtitle">{worker.name}</AppText>
         <AppText variant="caption" style={styles.location}>{worker.location}</AppText>
-        <AppText variant="small" style={styles.availability}>        {translateAvailability(worker.availability, t)}</AppText>
+        {localizedService ? (
+          <AppText variant="small" style={styles.service}>{localizedService.name}</AppText>
+        ) : null}
+        <AppText variant="small" style={styles.availability}>
+          {translateAvailability(worker.availability, t)}
+        </AppText>
       </View>
     </Pressable>
   );
@@ -50,6 +59,10 @@ const styles = StyleSheet.create({
   },
   location: {
     color: colors.textMuted,
+    marginTop: 4,
+  },
+  service: {
+    color: colors.text,
     marginTop: 4,
   },
   availability: {
